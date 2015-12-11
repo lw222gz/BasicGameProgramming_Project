@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NinjaBox.Model.GameObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +10,11 @@ namespace NinjaBox.Model
     {
         private List<Level> gameLevels;
         private const int amountOfLevels = 1;
+        private static Player player;
 
         public GameLevels()
         {
+            player = new Player();
             gameLevels = new List<Level>(3);
             ResetGameLevels();
         }
@@ -33,7 +36,7 @@ namespace NinjaBox.Model
         {
             for (int i = 0; i < amountOfLevels; i++)
             {
-                gameLevels.Add(new Level(i + 1));
+                gameLevels.Add(new Level(i + 1, player));
             }
         }
     }

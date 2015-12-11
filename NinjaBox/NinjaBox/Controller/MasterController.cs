@@ -69,8 +69,21 @@ namespace NinjaBox
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            //TODO:Menu - have a enum GameState and defines the state of the game, paused, start menu, game over manu etc.
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) { 
                 Exit();
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                gameController.ActiveLevel.Player.PlayerWantsToMoveLeft = true;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                gameController.ActiveLevel.Player.PlayerWantsToMoveRight = true;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) && gameController.ActiveLevel.Player.PlayerCanJump)
+            {
+                gameController.ActiveLevel.Player.PlayerJump();
             }
 
             gameController.UpdateGame((float)gameTime.ElapsedGameTime.TotalSeconds);

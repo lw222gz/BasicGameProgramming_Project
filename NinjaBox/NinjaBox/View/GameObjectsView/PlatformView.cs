@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using NinjaBox.Model;
 using NinjaBox.Model.GameObjects;
 using System;
 using System.Collections.Generic;
@@ -22,14 +23,14 @@ namespace NinjaBox.View.GameObjectsView
             platFormTexture = content.Load<Texture2D>("PlaceHolderPlatform.png");
         }
 
-        public void DrawPlatforms(List<Platform> platForms)
+        public void DrawPlatforms(List<IGameObject> platForms)
         {
             spriteBatch.Begin();
             foreach (Platform p in platForms)
             {
                 for(int i = 0; i < p.AmountOfViewPlatforms; i ++){
-                    spriteBatch.Draw(platFormTexture, 
-                                                    camera.getVisualCords(p.StartPosition, i*p.PlatformViewSize.X), 
+                    spriteBatch.Draw(platFormTexture,
+                                                    camera.getVisualCords(p.StartPosition, i * p.PlatformViewSize.X), 
                                                     null, 
                                                     Color.White, 
                                                     0, 

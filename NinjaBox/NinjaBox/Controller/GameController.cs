@@ -1,4 +1,5 @@
 ﻿using NinjaBox.Model;
+using NinjaBox.Model.GameObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,12 @@ namespace NinjaBox.Controller
 
         public void UpdateGame(float ElapsedTime)
         {
-            return;
+            activeLevel.Player.Update(ElapsedTime);
+
+            foreach (Platform p in activeLevel.Levelplatforms)
+            {
+                activeLevel.Player.CheckPlatformCollision(p);
+            }
         }
 
 

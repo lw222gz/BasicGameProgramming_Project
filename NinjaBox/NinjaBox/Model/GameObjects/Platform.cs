@@ -10,6 +10,7 @@ namespace NinjaBox.Model.GameObjects
     {
         private Vector2 startPosition;
         private Vector2 endPosition;
+        private Vector2 size;
 
         /// <summary>
         /// To not streatch out the platform image Ill reuse it several times.
@@ -22,6 +23,8 @@ namespace NinjaBox.Model.GameObjects
         {
             this.startPosition = startPosition;
             this.endPosition = endPosition;
+
+            this.size = new Vector2(startPosition.X, endPosition.X);
 
             amountofViewPlatforms = (endPosition.X - startPosition.X) / platformViewSize.X;
         }
@@ -39,11 +42,27 @@ namespace NinjaBox.Model.GameObjects
         {
             get { return platformViewSize; }
         }
+        public Vector2 Size
+        {
+            get { return size; }
+        }
         public float AmountOfViewPlatforms
         {
             get { return amountofViewPlatforms; }
         }
-        
+
+
+        /// <summary>
+        /// ATM there is no need for an update method here but if wanted I could make platforms move, therefore Ill keep the the method here for future use.
+        /// </summary>
+        /// <param name="elapsedTime">Amount of time that has elapsed</param>
+        public void Update(float elapsedTime)
+        {
+            return;
+        }
+
+
+
 
     }
 }

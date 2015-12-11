@@ -9,17 +9,24 @@ namespace NinjaBox.Model
 {
     class Level
     {
-        private List<Platform> levelPlatforms;
+        private List<IGameObject> levelPlatforms;
+        private Player player;
 
-        public Level(int level)
+        public Level(int level, Player player)
         {
-            levelPlatforms = new List<Platform>(10);
+            this.player = player;
+            levelPlatforms = new List<IGameObject>(10);
             GenerateLevel(level);
         }
 
-        public List<Platform> LevelPlatforms
+        public List<IGameObject> Levelplatforms
         {
             get { return levelPlatforms; }
+        }
+
+        public Player Player
+        {
+            get { return player; }
         }
 
         private void GenerateLevel(int level)
@@ -27,7 +34,10 @@ namespace NinjaBox.Model
             switch (level)
             {
                 case 1:
-                    levelPlatforms.Add(new Platform(new Vector2(0, 0.95f), new Vector2(10, 0.5f)));
+                    levelPlatforms.Add(new Platform(new Vector2(0f, 0.95f), new Vector2(2f, 0.95f)));
+                    levelPlatforms.Add(new Platform(new Vector2(1f, 0.5f), new Vector2(2f, 0.5f)));
+
+                    
                     break;
             }
         }
