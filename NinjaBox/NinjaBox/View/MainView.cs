@@ -11,25 +11,51 @@ namespace NinjaBox.View
 {
     class MainView
     {
-        private Camera camera;
+        protected static Camera camera;
+        protected static SpriteBatch spriteBatch;
+        protected static ContentManager content;
+
         private PlatformView platformView;
+        private EnemyView enemyView;
         private PlayerView playerView;
-        private SpriteBatch spriteBatch;
-        public MainView(GraphicsDevice device, ContentManager content)
+
+        /// <summary>
+        /// default constructor
+        /// </summary>
+        public MainView() { }
+
+        /// <summary>
+        /// Constructor with 2 params
+        /// </summary>
+        /// <param name="device"></param>
+        /// <param name="content"></param>
+        public MainView(GraphicsDevice device, ContentManager _content)
         {
             camera = new Camera(device);
             spriteBatch = new SpriteBatch(device);
-            platformView = new PlatformView(camera, content, spriteBatch);
-            playerView = new PlayerView(camera, content, spriteBatch);
+            content = _content;
+
+            playerView = new PlayerView();
+            platformView = new PlatformView();
+            enemyView = new EnemyView();
         }
 
         public void DrawGame(Level level)
         {
+            //updates the camera offset so the screen follows the player
             camera.UpdateCameraOffset(level.Player);
+
+
+
+            //calls on draw functions
+            enemyView.DrawEnemies(level.Enemies);
+
 
             platformView.DrawPlatforms(level.Levelplatforms);
 
             playerView.DrawPlayer(level.Player);
+
+            
         }
     }
 }

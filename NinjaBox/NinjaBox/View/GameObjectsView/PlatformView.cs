@@ -10,34 +10,36 @@ using System.Text;
 
 namespace NinjaBox.View.GameObjectsView
 {
-    class PlatformView
+    class PlatformView : MainView
     {
-        private Camera camera;
+        //private Camera camera;
         private Texture2D platFormTexture;
-        private SpriteBatch spriteBatch;
-        public PlatformView(Camera camera, ContentManager content, SpriteBatch spriteBatch)
-        {
-            this.camera = camera;
-            this.spriteBatch = spriteBatch;
+        //private SpriteBatch spriteBatch;
 
-            platFormTexture = content.Load<Texture2D>("PlaceHolderPlatform.png");
+        /// <summary>
+        /// default constructor
+        /// </summary>
+        public PlatformView() 
+        {
+            platFormTexture = content.Load<Texture2D>("Platform.png");
         }
 
-        public void DrawPlatforms(List<IGameObject> platForms)
+        public void DrawPlatforms(List<Platform> platForms)
         {
             spriteBatch.Begin();
+
             foreach (Platform p in platForms)
             {
                 for(int i = 0; i < p.AmountOfViewPlatforms; i ++){
                     spriteBatch.Draw(platFormTexture,
-                                                    camera.getVisualCords(p.StartPosition, i * p.PlatformViewSize.X), 
-                                                    null, 
-                                                    Color.White, 
-                                                    0, 
-                                                    Vector2.Zero, 
-                                                    1, 
-                                                    SpriteEffects.None, 
-                                                    0f);
+                                    camera.getVisualCords(p.StartPosition, i * p.PlatformViewSize.X), 
+                                    null, 
+                                    Color.White, 
+                                    0, 
+                                    Vector2.Zero, 
+                                    1, 
+                                    SpriteEffects.None, 
+                                    0f);
                 }
                 
             }

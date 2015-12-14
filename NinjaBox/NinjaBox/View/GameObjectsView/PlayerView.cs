@@ -9,20 +9,19 @@ using System.Text;
 
 namespace NinjaBox.View.GameObjectsView
 {
-    class PlayerView
+    class PlayerView : MainView
     {
-        private SpriteBatch spriteBatch;
-        private Camera camera;
+        //private SpriteBatch spriteBatch;
+        //private Camera camera;
         private Vector2 playerScale;
-
         private Texture2D playerTexture;
 
-        public PlayerView(Camera camera, ContentManager content, SpriteBatch spriteBatch)
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public PlayerView() 
         {
-            this.camera = camera;
-            this.spriteBatch = spriteBatch;
-
-            playerTexture = content.Load<Texture2D>("PlaceHolderHero.png");
+            playerTexture = content.Load<Texture2D>("Player.png");
         }
 
         public void DrawPlayer(Player player)

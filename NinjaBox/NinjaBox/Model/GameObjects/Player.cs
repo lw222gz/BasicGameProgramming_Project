@@ -6,7 +6,7 @@ using System.Text;
 
 namespace NinjaBox.Model.GameObjects
 {
-    class Player : IGameObject
+    class Player
     {
         private Vector2 position;
         private Vector2 velocity;
@@ -90,7 +90,8 @@ namespace NinjaBox.Model.GameObjects
             if(position.Y + (size.Y /2) >=  platform.StartPosition.Y &&
                 position.Y + (size.Y / 2) <= platform.StartPosition.Y + platform.PlatformViewSize.Y &&
                 position.X >= platform.StartPosition.X && 
-                position.X - (size.X /2) <= platform.EndPosition.X && velocity.Y >= 0)
+                position.X <= platform.EndPosition && 
+                velocity.Y >= 0)
             {
                 //When the player lands on a platform the jump is re-enabled
                 position.Y = platform.StartPosition.Y - size.Y/2;
@@ -103,6 +104,56 @@ namespace NinjaBox.Model.GameObjects
         {
             return;
         }
-        
+
+
+        public void CheckEnemyCollision(Enemy enemy)
+        {
+            if (enemy.EnemyDirection == Direction.Left)
+            {
+                if (position.X - size.X / 2 <= enemy.Position.X + (enemy.Size.X / 2) &&
+                   position.X - size.X / 2 >= enemy.Position.X &&
+                   position.Y + (size.Y / 2) <= enemy.Position.Y + (enemy.Size.Y / 2) &&
+                   position.Y - (size.Y / 2) >= enemy.Position.Y - (enemy.Size.Y / 2))
+                {
+                    enemy.ChangeDirection();
+                }
+            }
+            else
+            {
+                if (position.X + size.X / 2 >= enemy.Position.X - (enemy.Size.X / 2) &&
+                   position.X + size.X / 2 <= enemy.Position.X &&
+                   position.Y + (size.Y / 2) <= enemy.Position.Y + (enemy.Size.Y / 2) &&
+                   position.Y - (size.Y / 2) >= enemy.Position.Y - (enemy.Size.Y / 2))
+                {
+                    enemy.ChangeDirection();
+                }
+            }
+        }
+
+        public bool IsPlayerDetected(Enemy enemy)
+        {
+            if(enemy.EnemyDirection == Direction.Left){
+                if (position.X + (size.X / 2) >= enemy.DetectionAreaPosition.X &&
+                   position.X + (size.X / 2) <= enemy.Position.X && 
+                   position.Y <= enemy.Position.Y + (enemy.Size.Y / 2) + enemy.DetectionAreaYDownLed &&
+                   position.Y >= enemy.DetectionAreaPosition.Y)
+                {
+                    return true;
+                }               
+            }
+            else
+            {
+                if (position.X - (size.X / 2) <= enemy.Position.X + (enemy.Size.X / 2) + enemy.DetectionAreaXLed &&
+                   position.X - (size.X / 2) >= enemy.Position.X &&
+                   position.Y <= enemy.Position.Y + (enemy.Size.Y / 2) + enemy.DetectionAreaYDownLed &&
+                   position.Y >= enemy.Position.Y - (enemy.Size.Y / 2) - enemy.DetectionAreaYUpLed)
+                {
+                    return true;
+                }  
+            }
+            
+            return false;
+
+        }
     }
 }

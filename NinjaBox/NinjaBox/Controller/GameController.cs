@@ -37,6 +37,17 @@ namespace NinjaBox.Controller
             {
                 activeLevel.Player.CheckPlatformCollision(p);
             }
+
+            foreach (Enemy e in activeLevel.Enemies)
+            {
+                activeLevel.Player.CheckEnemyCollision(e);
+                if (activeLevel.Player.IsPlayerDetected(e))
+                {
+                    //CONTINUE HERE: Player has just died and need option to restart.
+
+                }
+                e.Update(ElapsedTime);
+            }
         }
 
 

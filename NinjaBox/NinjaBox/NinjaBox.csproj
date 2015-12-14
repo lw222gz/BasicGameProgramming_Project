@@ -41,13 +41,14 @@
     <Compile Include="Controller\GameController.cs" />
     <Compile Include="Controller\MasterController.cs" />
     <Compile Include="Model\GameLevels.cs" />
+    <Compile Include="Model\GameObjects\Enemy.cs" />
     <Compile Include="Model\GameObjects\Platform.cs" />
-    <Compile Include="Model\GameObjects\IGameObject.cs" />
     <Compile Include="Model\GameObjects\Player.cs" />
     <Compile Include="Model\Level.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\Camera.cs" />
+    <Compile Include="View\GameObjectsView\EnemyView.cs" />
     <Compile Include="View\GameObjectsView\PlatformView.cs" />
     <Compile Include="View\GameObjectsView\PlayerView.cs" />
     <Compile Include="View\MainView.cs" />
@@ -60,10 +61,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\PlaceHolderHero.png">
+    <Content Include="Content\DetectionAreaPlaceholder.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\PlaceHolderPlatform.png">
+    <Content Include="Content\EnemyPlaceHolder.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Platform.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Player.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />

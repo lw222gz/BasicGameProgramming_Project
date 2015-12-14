@@ -12,24 +12,34 @@ namespace NinjaBox.View
     {
         private float ScreenWidth;
         private float ScreenHeight;
-        private float cameraOffset;
+        private Vector2 cameraOffset;
         public Camera(GraphicsDevice device)
         {
             ScreenWidth = device.Viewport.Width;
             ScreenHeight = device.Viewport.Height;
-            cameraOffset = 0;
+            cameraOffset = new Vector2(0, 0);
             
         }
 
-
+        /// <summary>
+        /// default visual coords transformer
+        /// </summary>
+        /// <param name="modelPosition"></param>
+        /// <returns></returns>
         public Vector2 getVisualCords(Vector2 modelPosition)
         {
-            return new Vector2((modelPosition.X * ScreenWidth) - cameraOffset, modelPosition.Y * ScreenHeight);
+            return new Vector2((modelPosition.X * ScreenWidth) - cameraOffset.X, (modelPosition.Y * ScreenHeight) - cameraOffset.Y);
         }
 
+        /// <summary>
+        /// used when getting visual cords for a platform
+        /// </summary>
+        /// <param name="modelPosition"></param>
+        /// <param name="modifier"></param>
+        /// <returns></returns>
         public Vector2 getVisualCords(Vector2 modelPosition, float modifier)
         {
-            return new Vector2(((modelPosition.X * ScreenWidth) + modifier * ScreenWidth) - cameraOffset, modelPosition.Y * ScreenHeight);
+            return new Vector2(((modelPosition.X * ScreenWidth) + modifier * ScreenWidth) - cameraOffset.X, (modelPosition.Y * ScreenHeight) - cameraOffset.Y);
         }
 
         public Vector2 GetScale(Vector2 size, Texture2D texture)
@@ -41,8 +51,12 @@ namespace NinjaBox.View
         {
             if (player.Position.X >= 0.5f)
             {
-                cameraOffset = (player.Position.X - 0.5f) * ScreenWidth;
-            }            
+                cameraOffset.X = (player.Position.X - 0.5f) * ScreenWidth;
+            }
+            if (player.Position.Y <= 0.3f)
+            {
+                cameraOffset.Y = (player.Position.Y - 0.3f) * ScreenHeight;
+            }
         }
     }
 }
