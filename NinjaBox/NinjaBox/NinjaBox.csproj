@@ -51,7 +51,10 @@
     <Compile Include="View\GameObjectsView\EnemyView.cs" />
     <Compile Include="View\GameObjectsView\PlatformView.cs" />
     <Compile Include="View\GameObjectsView\PlayerView.cs" />
+    <Compile Include="View\MenuView\Button.cs" />
+    <Compile Include="View\MenuView\IMGUI.cs" />
     <Compile Include="View\MainView.cs" />
+    <Compile Include="View\MenuView\GameMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -61,16 +64,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\DetectionAreaPlaceholder.png">
+    <Content Include="Content\Enemy.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\EnemyPlaceHolder.png">
+    <Content Include="Content\EnemyDetectionArea.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\GameBackground.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\MenuBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Platform.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Player.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\RestartButtonHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\RestartButtonNormal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />

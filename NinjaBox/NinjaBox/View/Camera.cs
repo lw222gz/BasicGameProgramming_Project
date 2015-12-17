@@ -20,6 +20,10 @@ namespace NinjaBox.View
             cameraOffset = new Vector2(0, 0);
             
         }
+        public Vector2 CameraOffSet
+        {
+            get { return cameraOffset; }
+        }
 
         /// <summary>
         /// default visual coords transformer

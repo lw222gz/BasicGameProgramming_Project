@@ -15,12 +15,16 @@ namespace NinjaBox.Controller
         private Level activeLevel;
         private GameLevels gameLevels;
         private int CurrentLevel;
+        private bool isPlayerDead;
+
+        private int Counter;
 
         public GameController(GameLevels gameLevels)
         {
             CurrentLevel = 1;
             this.gameLevels = gameLevels;
             setCurrentGameLevel();
+            isPlayerDead = false;
         }
 
         //properties
@@ -28,23 +32,41 @@ namespace NinjaBox.Controller
         {
             get { return activeLevel; }
         }
+        public bool IsPlayerDead
+        {
+            get { return isPlayerDead; }
+        }
 
         public void UpdateGame(float ElapsedTime)
         {
             activeLevel.Player.Update(ElapsedTime);
 
+            //-- Platform collision and checks if a player is on a platform, if so the player can jump
+            //TODO: refactor this functionality, I feel like there is alot of ways this can be done better but for now Ill leave it like this.
+            Counter = 0;
             foreach (Platform p in activeLevel.Levelplatforms)
             {
-                activeLevel.Player.CheckPlatformCollision(p);
+                if (!activeLevel.Player.CheckPlatformCollision(p))
+                {
+                    Counter += 1;
+                }
             }
+            if (Counter == activeLevel.Levelplatforms.Count)
+            {
+                activeLevel.Player.PlayerCantJump();
+            }
+            else
+            {
+                activeLevel.Player.SetPlayerCanJump();
+            }
+            //-- 
 
             foreach (Enemy e in activeLevel.Enemies)
             {
                 activeLevel.Player.CheckEnemyCollision(e);
                 if (activeLevel.Player.IsPlayerDetected(e))
                 {
-                    //CONTINUE HERE: Player has just died and need option to restart.
-
+                    isPlayerDead = true;
                 }
                 e.Update(ElapsedTime);
             }

@@ -28,8 +28,6 @@ namespace NinjaBox.View.GameObjectsView
         {
             playerScale = camera.GetScale(player.Size, playerTexture);
 
-            spriteBatch.Begin();
-
             spriteBatch.Draw(playerTexture, 
                     camera.getVisualCords(player.Position), 
                     null,
@@ -39,8 +37,6 @@ namespace NinjaBox.View.GameObjectsView
                     playerScale,
                     SpriteEffects.None,
                     0);
-
-            spriteBatch.End();
         }
     }
 }

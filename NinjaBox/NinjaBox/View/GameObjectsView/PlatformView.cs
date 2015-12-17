@@ -26,8 +26,6 @@ namespace NinjaBox.View.GameObjectsView
 
         public void DrawPlatforms(List<Platform> platForms)
         {
-            spriteBatch.Begin();
-
             foreach (Platform p in platForms)
             {
                 for(int i = 0; i < p.AmountOfViewPlatforms; i ++){
@@ -43,7 +41,6 @@ namespace NinjaBox.View.GameObjectsView
                 }
                 
             }
-            spriteBatch.End();
         }
     }
 }

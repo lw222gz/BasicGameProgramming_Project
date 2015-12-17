@@ -17,6 +17,7 @@ namespace NinjaBox
         private GameLevels gameLevels;
         private GameController gameController;
         private MainView mainView;
+        private IMGUI imgui;
         
 
         public MasterController()
@@ -47,10 +48,11 @@ namespace NinjaBox
         /// all of your content.
         /// </summary>
         protected override void LoadContent()
-        {            
+        {
+            imgui = new IMGUI(Content);
             gameLevels = new GameLevels();
             gameController = new GameController(gameLevels);
-            mainView = new MainView(GraphicsDevice, Content);
+            mainView = new MainView(GraphicsDevice, Content, imgui);           
         }
 
         /// <summary>
@@ -73,17 +75,31 @@ namespace NinjaBox
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) { 
                 Exit();
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            if (!gameController.IsPlayerDead)
             {
-                gameController.ActiveLevel.Player.PlayerWantsToMoveLeft = true;
+                if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                {
+                    gameController.ActiveLevel.Player.PlayerWantsToMoveLeft = true;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                {
+                    gameController.ActiveLevel.Player.PlayerWantsToMoveRight = true;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Space) && gameController.ActiveLevel.Player.PlayerCanJump)
+                {
+                    gameController.ActiveLevel.Player.PlayerJump();
+                }
+
+                
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            else if(gameController.IsPlayerDead)
             {
-                gameController.ActiveLevel.Player.PlayerWantsToMoveRight = true;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.Space) && gameController.ActiveLevel.Player.PlayerCanJump)
-            {
-                gameController.ActiveLevel.Player.PlayerJump();
+                this.IsMouseVisible = true;
+                if (imgui.doMenu(MenuType.Restart))
+                {
+                    //CONTINUE HERE: menu buttons are not yet responsive to clicks.
+                    // https://github.com/dntoll/1dv437LectureCode2015/blob/master/LectureExample/IMGUI.cs
+                }
             }
 
             gameController.UpdateGame((float)gameTime.ElapsedGameTime.TotalSeconds);

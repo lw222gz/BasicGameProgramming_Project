@@ -18,16 +18,12 @@ namespace NinjaBox.View.GameObjectsView
 
         public EnemyView()
         {
-            enemyTexture = content.Load<Texture2D>("EnemyPlaceHolder.png");
-            detectionTexture = content.Load<Texture2D>("DetectionAreaPlaceholder.png");
+            enemyTexture = content.Load<Texture2D>("Enemy.png");
+            detectionTexture = content.Load<Texture2D>("EnemyDetectionArea.png");
         }
 
-        public void DrawEnemies(List<Enemy> Enemies){
+        public void DrawEnemies(List<Enemy> Enemies){                   
 
-            
-            spriteBatch.Begin();            
-
-            //SpriteEffect.FlipHorizontally
             foreach (Enemy e in Enemies)
             {
                 enemyScale = camera.GetScale(e.Size, enemyTexture);
@@ -42,6 +38,16 @@ namespace NinjaBox.View.GameObjectsView
                     spriteEffect = SpriteEffects.FlipHorizontally;
                 }
 
+                spriteBatch.Draw(detectionTexture,
+                                camera.getVisualCords(e.DetectionAreaPosition),
+                                null,
+                                new Color(0.7f, 0.7f, 0.7f, 0.7f),
+                                0f,
+                                Vector2.Zero,
+                                1f,
+                                spriteEffect,
+                                0);
+
                 spriteBatch.Draw(enemyTexture,
                                 camera.getVisualCords(e.Position),
                                 null,
@@ -52,20 +58,10 @@ namespace NinjaBox.View.GameObjectsView
                                 spriteEffect,
                                 0);
 
-                spriteBatch.Draw(detectionTexture,
-                                camera.getVisualCords(e.DetectionAreaPosition),
-                                null,
-                                Color.Yellow,
-                                0f,
-                                Vector2.Zero,
-                                1f,
-                                spriteEffect,
-                                0);
+                
                             
             }
 
-            spriteBatch.End();
-            return;
         }
     }
 }

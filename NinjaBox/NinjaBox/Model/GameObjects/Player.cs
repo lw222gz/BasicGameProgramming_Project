@@ -17,11 +17,13 @@ namespace NinjaBox.Model.GameObjects
         private bool playerWantsToMoveLeft;
 
         private bool playerCanJump;
-
+        private bool playerIsOnPlatform;
         public Player()
         {
             playerWantsToMoveLeft = false;
             playerWantsToMoveRight = false;
+
+            playerIsOnPlatform = false;
             position = new Vector2(0.1f, 0.85f);
             velocity = new Vector2(0f, 0f);
         }
@@ -73,7 +75,7 @@ namespace NinjaBox.Model.GameObjects
             if (velocity.Y >= 1)
             {
                 velocity.Y = 1;
-            }           
+            }
 
             playerWantsToMoveLeft = false;
             playerWantsToMoveRight = false;
@@ -85,7 +87,7 @@ namespace NinjaBox.Model.GameObjects
             velocity.Y = -Gravity.Y - 0.1f;
         }
         
-        public void CheckPlatformCollision(Platform platform)
+        public bool CheckPlatformCollision(Platform platform)
         {
             if(position.Y + (size.Y /2) >=  platform.StartPosition.Y &&
                 position.Y + (size.Y / 2) <= platform.StartPosition.Y + platform.PlatformViewSize.Y &&
@@ -95,8 +97,9 @@ namespace NinjaBox.Model.GameObjects
             {
                 //When the player lands on a platform the jump is re-enabled
                 position.Y = platform.StartPosition.Y - size.Y/2;
-                playerCanJump = true;
+                return true;
             }
+            return false;
         }
 
 
@@ -154,6 +157,16 @@ namespace NinjaBox.Model.GameObjects
             
             return false;
 
+        }
+
+        public void SetPlayerCanJump()
+        {
+            playerCanJump = true;
+        }
+
+        public void PlayerCantJump()
+        {
+            playerCanJump = false;
         }
     }
 }
