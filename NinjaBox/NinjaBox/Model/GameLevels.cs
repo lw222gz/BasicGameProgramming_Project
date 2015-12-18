@@ -16,7 +16,7 @@ namespace NinjaBox.Model
         {
             player = new Player();
             gameLevels = new List<Level>(3);
-            ResetGameLevels();
+            ResetGame();
         }
 
 
@@ -32,12 +32,19 @@ namespace NinjaBox.Model
         /// <summary>
         /// Resets all game levels to their default
         /// </summary>
-        private void ResetGameLevels()
+        private void ResetGame()
         {
             for (int i = 0; i < amountOfLevels; i++)
             {
                 gameLevels.Add(new Level(i + 1, player));
             }
+        }
+
+        public Level ResetLevel(int CurrentLevel)
+        {
+            player = new Player();
+            gameLevels[CurrentLevel - 1] = new Level(CurrentLevel, player);
+            return gameLevels[CurrentLevel - 1];
         }
     }
 }

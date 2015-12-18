@@ -15,15 +15,15 @@ namespace NinjaBox.Model.GameObjects
         private Vector2 Gravity = new Vector2(0f, 0.7f);
         private bool playerWantsToMoveRight;
         private bool playerWantsToMoveLeft;
+        private bool isPlayerDead;
 
         private bool playerCanJump;
-        private bool playerIsOnPlatform;
         public Player()
         {
             playerWantsToMoveLeft = false;
             playerWantsToMoveRight = false;
 
-            playerIsOnPlatform = false;
+            isPlayerDead = false;
             position = new Vector2(0.1f, 0.85f);
             velocity = new Vector2(0f, 0f);
         }
@@ -53,6 +53,10 @@ namespace NinjaBox.Model.GameObjects
             get { return playerCanJump; }
         }
 
+        public bool IsPlayerDead
+        {
+            get { return isPlayerDead; }
+        }
 
         /// <summary>
         /// Updates the players position
@@ -167,6 +171,11 @@ namespace NinjaBox.Model.GameObjects
         public void PlayerCantJump()
         {
             playerCanJump = false;
+        }
+
+        public void PlayerDead()
+        {
+            isPlayerDead = true;
         }
     }
 }

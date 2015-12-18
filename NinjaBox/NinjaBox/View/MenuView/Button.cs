@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace NinjaBox.View.MenuView
         private float buttonWidth;
         private float buttonHeight;
         private bool isMouseOver;
+        private ButtonState oldMouseState;
         //button with no hover effect
         public Button(Vector2 position, Texture2D buttonImage) : this(position, buttonImage, buttonImage)
         { }
@@ -27,8 +29,10 @@ namespace NinjaBox.View.MenuView
             this.hoverButtonImage = hoverButtonImage;
             this.buttonWidth = buttonImage.Bounds.Width;
             this.buttonHeight = buttonImage.Bounds.Height;
-            this.isMouseOver = false;
+            OldMouseState = ButtonState.Released;
             ActiveTexture = buttonImage;
+            IsMouseOver = false;
+            IsButtonClicked = false;
         }
 
         public Vector2 Position
@@ -50,15 +54,26 @@ namespace NinjaBox.View.MenuView
         public float ButtonHeigth
         {
             get { return buttonHeight; }
-        }
-
-        public bool IsMouseOver
-        {
-            get { return isMouseOver; }
-            set { isMouseOver = value; }
-        }
+        }      
 
         public Texture2D ActiveTexture
+        {
+            get;
+            set;
+        }
+
+        public ButtonState OldMouseState
+        {
+            get;
+            set;
+        }
+        public bool IsMouseOver
+        {
+            get;
+            set;
+        }
+
+        public bool IsButtonClicked
         {
             get;
             set;

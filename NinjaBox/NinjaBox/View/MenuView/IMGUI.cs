@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NinjaBox.View.MenuView;
-using NinjaBox.View.MenuViews;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,59 +10,132 @@ using System.Text;
 
 namespace NinjaBox.View
 {
-    public enum MenuType
+    public enum ButtonType
     {
         Restart,
-        Main,
-        Pause,
+        Play,
+        Resume,
         None
     }
-    class IMGUI
+    class IMGUI : MainView
     {
-        private MenuType currentMenu;
-        private GameMenu gameMenu;
+        private Button button;
+        private List<Button> activeButtons;
+        private Button RestartButton;
 
-        public IMGUI(ContentManager content)
+        //private ButtonType currentMenu;
+        //private GameMenu gameMenu;
+
+        public IMGUI()
         {
-            gameMenu = new GameMenu(content);
-            currentMenu = MenuType.None;   
+            activeButtons = new List<Button>(3);
+            //gameMenu = new GameMenu(content);
+            //currentMenu = ButtonType.None;   
+            
         }
 
-        public MenuType ActiveMenu
+        public List<Button> ActiveButtons
         {
-            get { return currentMenu; }
+            get { return activeButtons; }
         }
 
+        /// <summary>
+        /// Loads all button objects
+        /// </summary>
+        public void LoadButtons()
+        {
+            RestartButton = new Button(new Vector2(700, 200),
+                                        content.Load<Texture2D>("RestartButtonNormal.png"),
+                                        content.Load<Texture2D>("RestartButtonHover.png"));
+        }
 
-        public bool doMenu(MenuType menuType)
+        public bool doButton(ButtonType buttonType)
         {
             MouseState mouseState = Mouse.GetState();
 
-            currentMenu = menuType;
+            button = getButtonValue(buttonType);
 
-            gameMenu.setCurrentMenu(menuType);
-
-            foreach (Button b in gameMenu.CurrentMenu)
+            button.IsMouseOver = false;
+            button.IsButtonClicked = false;
+            if (mouseState.X >= button.Position.X - button.ButtonWidth / 2 &&
+                mouseState.X <= button.Position.X + button.ButtonWidth / 2 &&
+                mouseState.Y >= button.Position.Y - button.ButtonHeigth / 2 &&
+                mouseState.Y <= button.Position.Y + button.ButtonHeigth / 2)
             {
-                if(mouseState.X >= b.Position.X - b.ButtonWidth/2 &&
-                    mouseState.X <= b.Position.X + b.ButtonWidth/2 &&
-                    mouseState.Y >= b.Position.Y - b.ButtonHeigth/2 && 
-                    mouseState.Y <= b.Position.Y + b.ButtonHeigth/2)
+                button.ActiveTexture = button.HoverButtonImage;
+                button.IsMouseOver = true;
+
+                if (mouseState.LeftButton == ButtonState.Pressed)
                 {
-                    b.IsMouseOver = true;
+                    button.OldMouseState = ButtonState.Pressed;
                 }
-                else
+                if (mouseState.LeftButton == ButtonState.Released && button.OldMouseState == ButtonState.Pressed)
                 {
-                    b.IsMouseOver = false;
+                    button.IsButtonClicked = true;
+                    button.OldMouseState = ButtonState.Released;
                 }
             }
+            else
+            {
+                button.ActiveTexture = button.ButtonImage;
+            }
 
-            return false;
+
+            setButtonValue(buttonType);
+
+
+            activeButtons.Add(button);
+            if (button.IsButtonClicked && button.IsMouseOver)
+            {
+                int a = 5;
+            }
+
+            return button.IsButtonClicked && button.IsMouseOver;         
         }
 
+        private Button getButtonValue(ButtonType buttonType)
+        {
+            switch (buttonType)
+            {
+                case ButtonType.Restart:
+                    return RestartButton;
+                   
+ 
+                default: 
+                    return button;
+            }
+        }
+
+        private void setButtonValue(ButtonType buttonType)
+        {
+            switch (buttonType)
+            {
+                case ButtonType.Restart:
+                    RestartButton = button;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Draws all active menu buttons
+        /// </summary>
         public void DrawMenu()
         {
-            gameMenu.DrawMenu();
+            foreach (Button b in activeButtons)
+            {
+                spriteBatch.Draw(b.ActiveTexture,
+                            b.Position,
+                            null,
+                            Color.White,
+                            0f,
+                            new Vector2(b.ActiveTexture.Bounds.Width / 2, b.ActiveTexture.Bounds.Height / 2),
+                            1f,
+                            SpriteEffects.None,
+                            0);
+            }
+
+            //clears the list as it will be refilled with buttons in the next update
+            activeButtons.Clear();            
         }
     }
 }

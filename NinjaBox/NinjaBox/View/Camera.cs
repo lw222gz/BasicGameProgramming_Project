@@ -57,9 +57,18 @@ namespace NinjaBox.View
             {
                 cameraOffset.X = (player.Position.X - 0.5f) * ScreenWidth;
             }
+            else 
+            { 
+                cameraOffset.X = 0; 
+            }
+
             if (player.Position.Y <= 0.3f)
             {
                 cameraOffset.Y = (player.Position.Y - 0.3f) * ScreenHeight;
+            }
+            else 
+            { 
+                cameraOffset.Y = 0; 
             }
         }
     }

@@ -54,7 +54,6 @@
     <Compile Include="View\MenuView\Button.cs" />
     <Compile Include="View\MenuView\IMGUI.cs" />
     <Compile Include="View\MainView.cs" />
-    <Compile Include="View\MenuView\GameMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

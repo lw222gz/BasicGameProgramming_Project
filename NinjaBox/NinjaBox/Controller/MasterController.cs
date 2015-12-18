@@ -49,10 +49,11 @@ namespace NinjaBox
         /// </summary>
         protected override void LoadContent()
         {
-            imgui = new IMGUI(Content);
+            imgui = new IMGUI();
             gameLevels = new GameLevels();
             gameController = new GameController(gameLevels);
-            mainView = new MainView(GraphicsDevice, Content, imgui);           
+            mainView = new MainView(GraphicsDevice, Content, imgui);
+            
         }
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace NinjaBox
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) { 
                 Exit();
             }
-            if (!gameController.IsPlayerDead)
+            if (!gameController.ActiveLevel.Player.IsPlayerDead && !gameController.IsGamePaused)
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Left))
                 {
@@ -92,17 +93,20 @@ namespace NinjaBox
 
                 
             }
-            else if(gameController.IsPlayerDead)
+            else if(gameController.ActiveLevel.Player.IsPlayerDead)
             {
                 this.IsMouseVisible = true;
-                if (imgui.doMenu(MenuType.Restart))
+                if (imgui.doButton(ButtonType.Restart))
                 {
-                    //CONTINUE HERE: menu buttons are not yet responsive to clicks.
-                    // https://github.com/dntoll/1dv437LectureCode2015/blob/master/LectureExample/IMGUI.cs
+                    gameController.RestartLevel();
                 }
             }
 
-            gameController.UpdateGame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            if (!gameController.IsGamePaused)
+            {
+                gameController.UpdateGame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            }
+            
 
             base.Update(gameTime);
         }

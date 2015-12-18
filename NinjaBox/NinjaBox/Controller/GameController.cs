@@ -15,7 +15,8 @@ namespace NinjaBox.Controller
         private Level activeLevel;
         private GameLevels gameLevels;
         private int CurrentLevel;
-        private bool isPlayerDead;
+
+        private bool isGamePaused;
 
         private int Counter;
 
@@ -24,7 +25,7 @@ namespace NinjaBox.Controller
             CurrentLevel = 1;
             this.gameLevels = gameLevels;
             setCurrentGameLevel();
-            isPlayerDead = false;
+            isGamePaused = false;
         }
 
         //properties
@@ -32,9 +33,9 @@ namespace NinjaBox.Controller
         {
             get { return activeLevel; }
         }
-        public bool IsPlayerDead
+        public bool IsGamePaused
         {
-            get { return isPlayerDead; }
+            get { return isGamePaused; }
         }
 
         public void UpdateGame(float ElapsedTime)
@@ -66,7 +67,7 @@ namespace NinjaBox.Controller
                 activeLevel.Player.CheckEnemyCollision(e);
                 if (activeLevel.Player.IsPlayerDetected(e))
                 {
-                    isPlayerDead = true;
+                    activeLevel.Player.PlayerDead();
                 }
                 e.Update(ElapsedTime);
             }
@@ -82,5 +83,10 @@ namespace NinjaBox.Controller
         }
 
 
+        //restarts the current level
+        public void RestartLevel()
+        {
+            activeLevel = gameLevels.ResetLevel(CurrentLevel);
+        }
     }
 }
