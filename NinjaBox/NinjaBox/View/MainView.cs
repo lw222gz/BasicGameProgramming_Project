@@ -19,6 +19,7 @@ namespace NinjaBox.View
         private PlatformView platformView;
         private EnemyView enemyView;
         private PlayerView playerView;
+        private LevelExitView levelExitView;
         private IMGUI imgui;
 
         private Texture2D menuBackgroundTexture;
@@ -48,6 +49,7 @@ namespace NinjaBox.View
             playerView = new PlayerView();
             platformView = new PlatformView();
             enemyView = new EnemyView();
+            levelExitView = new LevelExitView();
 
             menuBackgroundTexture = content.Load<Texture2D>("MenuBackground.png");
             backGroundTexture = content.Load<Texture2D>("GameBackground.png");
@@ -57,42 +59,28 @@ namespace NinjaBox.View
         public void DrawGame(Level level)
         {
             //updates the camera offset so the screen follows the player
-            camera.UpdateCameraOffset(level.Player);
-
-
-            if (level.Player.Position.X > 0.5f)
-            {
-                backGroundPosition.X = level.Player.Position.X - 0.5f;
-            }
-            else
-            {
-                backGroundPosition.X = 0;
-            }
-
-            if (level.Player.Position.Y < 0.3f)
-            {
-                backGroundPosition.Y = level.Player.Position.Y - 0.3f;
-            }
-            else 
-            { 
-                backGroundPosition.Y = 0; 
-            }
+            camera.UpdateCameraOffset(level.Player, level.LevelExit);
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(backGroundTexture, camera.getVisualCords(backGroundPosition), Color.White);
+            //The background allways have the same model coords as the camera offset
+            spriteBatch.Draw(backGroundTexture, camera.getVisualCords(camera.CameraOffSet), Color.White);
             
            
 
-            //calls on draw functions
+            //calls on draw functions for level objects
             enemyView.DrawEnemies(level.Enemies);
 
 
             platformView.DrawPlatforms(level.Levelplatforms);
 
+            
+
+            levelExitView.DrawExit(level.LevelExit);
             playerView.DrawPlayer(level.Player);
 
 
+            //if a buttons exist then the menu is drawn over the game.
             if (imgui.ActiveButtons.Count > 0)
             {
                 spriteBatch.Draw(menuBackgroundTexture, new Vector2(0, 0), new Color(0.7f, 0.7f, 0.7f, 0.7f));

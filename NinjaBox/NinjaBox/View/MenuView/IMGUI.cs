@@ -78,6 +78,8 @@ namespace NinjaBox.View
             else
             {
                 button.ActiveTexture = button.ButtonImage;
+                //resets the old mouse state if the mouse isent over the button
+                button.OldMouseState = ButtonState.Released;
             }
 
 
@@ -85,10 +87,6 @@ namespace NinjaBox.View
 
 
             activeButtons.Add(button);
-            if (button.IsButtonClicked && button.IsMouseOver)
-            {
-                int a = 5;
-            }
 
             return button.IsButtonClicked && button.IsMouseOver;         
         }

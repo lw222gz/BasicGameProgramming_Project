@@ -21,14 +21,18 @@ namespace NinjaBox.View.GameObjectsView
         /// </summary>
         public PlatformView() 
         {
-            platFormTexture = content.Load<Texture2D>("Platform.png");
+            platFormTexture = content.Load<Texture2D>("PlatformPiecePlaceholder.png");
         }
-
+        /// <summary>
+        /// Draws all the platforms for a level
+        /// </summary>
+        /// <param name="platForms">list of all platforms for the current level</param>
         public void DrawPlatforms(List<Platform> platForms)
         {
             foreach (Platform p in platForms)
             {
-                for(int i = 0; i < p.AmountOfViewPlatforms; i ++){
+                for (int i = 0; i < p.AmountOfViewPlatforms; i++)
+                {
                     spriteBatch.Draw(platFormTexture,
                                     camera.getVisualCords(p.StartPosition, i * p.PlatformViewSize.X), 
                                     null, 
@@ -39,7 +43,6 @@ namespace NinjaBox.View.GameObjectsView
                                     SpriteEffects.None, 
                                     0f);
                 }
-                
             }
         }
     }

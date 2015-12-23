@@ -71,6 +71,17 @@ namespace NinjaBox.Controller
                 }
                 e.Update(ElapsedTime);
             }
+            if (activeLevel.Player.Position.Y - activeLevel.Player.Size.Y / 2 > 1)
+            {
+                activeLevel.Player.PlayerDead();
+            }
+
+            //checks if the player reached the end of the level
+            if (activeLevel.Player.IsLevelCompleted(activeLevel.LevelExit))
+            {
+                CurrentLevel += 1;
+                activeLevel = gameLevels.getCurrentLevel(CurrentLevel);
+            }
         }
 
 

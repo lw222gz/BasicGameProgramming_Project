@@ -32,7 +32,8 @@ namespace NinjaBox.View
         /// <returns></returns>
         public Vector2 getVisualCords(Vector2 modelPosition)
         {
-            return new Vector2((modelPosition.X * ScreenWidth) - cameraOffset.X, (modelPosition.Y * ScreenHeight) - cameraOffset.Y);
+            modelPosition -= cameraOffset;
+            return new Vector2((modelPosition.X * ScreenWidth), (modelPosition.Y * ScreenHeight));
         }
 
         /// <summary>
@@ -43,7 +44,8 @@ namespace NinjaBox.View
         /// <returns></returns>
         public Vector2 getVisualCords(Vector2 modelPosition, float modifier)
         {
-            return new Vector2(((modelPosition.X * ScreenWidth) + modifier * ScreenWidth) - cameraOffset.X, (modelPosition.Y * ScreenHeight) - cameraOffset.Y);
+            modelPosition -= cameraOffset;
+            return new Vector2(((modelPosition.X * ScreenWidth) + modifier * ScreenWidth), (modelPosition.Y * ScreenHeight));
         }
 
         public Vector2 GetScale(Vector2 size, Texture2D texture)
@@ -51,11 +53,15 @@ namespace NinjaBox.View
             return new Vector2((size.X * ScreenWidth) / texture.Bounds.Width, (size.Y * ScreenHeight) / texture.Bounds.Height);
         }
 
-        public void UpdateCameraOffset(Player player)
+        public void UpdateCameraOffset(Player player, LevelExit levelExit)
         {
             if (player.Position.X >= 0.5f)
             {
-                cameraOffset.X = (player.Position.X - 0.5f) * ScreenWidth;
+                if (!(player.Position.X + 0.5f >= levelExit.Position.X + levelExit.Size.X / 2))
+                {
+                    cameraOffset.X = (player.Position.X - 0.5f);// * ScreenWidth;
+                }
+                
             }
             else 
             { 
@@ -64,7 +70,7 @@ namespace NinjaBox.View
 
             if (player.Position.Y <= 0.3f)
             {
-                cameraOffset.Y = (player.Position.Y - 0.3f) * ScreenHeight;
+                cameraOffset.Y = (player.Position.Y - 0.3f);// * ScreenHeight;
             }
             else 
             { 

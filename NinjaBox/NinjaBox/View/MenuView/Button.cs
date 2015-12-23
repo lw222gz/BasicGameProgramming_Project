@@ -15,8 +15,6 @@ namespace NinjaBox.View.MenuView
         private Texture2D hoverButtonImage;
         private float buttonWidth;
         private float buttonHeight;
-        private bool isMouseOver;
-        private ButtonState oldMouseState;
         //button with no hover effect
         public Button(Vector2 position, Texture2D buttonImage) : this(position, buttonImage, buttonImage)
         { }

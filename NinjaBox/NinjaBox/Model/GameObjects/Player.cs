@@ -90,13 +90,27 @@ namespace NinjaBox.Model.GameObjects
             playerCanJump = false;
             velocity.Y = -Gravity.Y - 0.1f;
         }
+
+        public void SetPlayerPosition(Vector2 position)
+        {
+            this.position = position;
+        }
+
+        public void Restart(Vector2 position)
+        {
+            isPlayerDead = false;
+            SetPlayerPosition(position);
+        }
         
+        //TODO: Right now all of the collision code is in the player scirpt. Could be broken out to it's own script
+
+        //checks the collision for platforms
         public bool CheckPlatformCollision(Platform platform)
         {
             if(position.Y + (size.Y /2) >=  platform.StartPosition.Y &&
                 position.Y + (size.Y / 2) <= platform.StartPosition.Y + platform.PlatformViewSize.Y &&
                 position.X >= platform.StartPosition.X && 
-                position.X <= platform.EndPosition && 
+                position.X <= platform.EndXPosition && 
                 velocity.Y >= 0)
             {
                 //When the player lands on a platform the jump is re-enabled
@@ -106,13 +120,9 @@ namespace NinjaBox.Model.GameObjects
             return false;
         }
 
-
-        public void CollisionEffect()
-        {
-            return;
-        }
-
-
+        //checks if the player is too close to the enemies backs, if so they turn around to then be killed.
+        //NOTE: This function does not cause the player to die. If the robots turn the method IsPlayerDetected will kill them.
+        //WHY: If I want to add a detection timer, let's say if the player is within the detection area for 0.4 seconds THEN the player dies. Thus I dont want to kill the player via this method.
         public void CheckEnemyCollision(Enemy enemy)
         {
             if (enemy.EnemyDirection == Direction.Left)
@@ -137,6 +147,7 @@ namespace NinjaBox.Model.GameObjects
             }
         }
 
+        //checks if the player is within the detection area for an enemy. If so the player dies instantly.
         public bool IsPlayerDetected(Enemy enemy)
         {
             if(enemy.EnemyDirection == Direction.Left){
@@ -160,22 +171,34 @@ namespace NinjaBox.Model.GameObjects
             }
             
             return false;
-
         }
 
+        public bool IsLevelCompleted(LevelExit levelExit)
+        {
+            if(position.X >= levelExit.Position.X + levelExit.Size.X/2 &&
+               position.Y <= levelExit.Position.Y + levelExit.Size.Y/2 && 
+               position.Y >= levelExit.Position.Y - levelExit.Size.Y/2)
+            {                
+                return true;
+            }
+
+            return false;
+        }
+
+        //changes values for private fields
         public void SetPlayerCanJump()
         {
             playerCanJump = true;
         }
-
         public void PlayerCantJump()
         {
             playerCanJump = false;
         }
-
         public void PlayerDead()
         {
             isPlayerDead = true;
         }
+
+        
     }
 }

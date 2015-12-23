@@ -9,24 +9,22 @@ namespace NinjaBox.Model.GameObjects
     class Platform
     {
         private Vector2 startPosition;
-        private float endPosition;
+        private float endXPosition;
         private Vector2 size;
 
         /// <summary>
         /// To not streatch out the platform image Ill reuse it several times.
         /// so the view size of a platform is 0.5 x 0.1 in model cords while the model platform is the size of the given start and end position.
         /// </summary>
-        private Vector2 platformSize = new Vector2(0.5f, 0.1f);
-        private int amountofViewPlatforms;
-        
-        public Platform(Vector2 startPosition, int amountOfPlatforms)
+        //private Vector2 platformSize = new Vector2(0.5f, 0.1f);
+        private Vector2 platformSize = new Vector2(0.1f, 0.1f);
+        private int amountOfViewPlatforms;
+
+        public Platform(Vector2 startPosition, float endXPosition, int amountOfViewPlatforms)
         {
             this.startPosition = startPosition;
-            this.endPosition = startPosition.X + platformSize.X * amountOfPlatforms;
-
-            this.size = new Vector2(startPosition.X, endPosition);
-
-            this.amountofViewPlatforms = amountOfPlatforms;
+            this.endXPosition = endXPosition;
+            this.amountOfViewPlatforms = amountOfViewPlatforms;       
         }
 
         //properties
@@ -34,9 +32,9 @@ namespace NinjaBox.Model.GameObjects
         {
             get { return startPosition; }
         }
-        public float EndPosition
+        public float EndXPosition
         {
-            get { return endPosition; }
+            get { return endXPosition; }
         }
         public Vector2 PlatformViewSize
         {
@@ -46,9 +44,9 @@ namespace NinjaBox.Model.GameObjects
         {
             get { return size; }
         }
-        public float AmountOfViewPlatforms
+        public int AmountOfViewPlatforms
         {
-            get { return amountofViewPlatforms; }
+            get { return amountOfViewPlatforms; }
         }
 
 

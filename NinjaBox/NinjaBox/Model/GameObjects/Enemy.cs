@@ -31,7 +31,9 @@ namespace NinjaBox.Model.GameObjects
         public Enemy(Vector2 position, Direction direction)
         {
             this.position = position;
-            this.position.Y -= size.Y / 2;
+            //small adjustments to the position required due to the enemies take up more than 1 grid size-wise
+            this.position.Y -= size.Y / 10;
+            this.position.X += size.X / 2;
             this.direction = direction;
 
             setDetectionArea();
