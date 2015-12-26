@@ -11,6 +11,7 @@ namespace NinjaBox.Model
     {
         private List<Platform> levelPlatforms;
         private List<Enemy> enemies;
+        private List<Message> levelMessages;
         private Player player;
         private LevelExit levelExit;
         private Vector2 playerStartPosition;
@@ -22,19 +23,59 @@ namespace NinjaBox.Model
         private Vector2 platformStartPoint;
         private float platformXEndPoint;
 
+        private bool levelHasExit;
 
-        public Level(char[,] levelDesign, Player player)
+        public Level(char[,] levelDesign, Player player, int levelIdentifier)
         {
             this.player = player;
-            levelPlatforms = new List<Platform>(10);
-            enemies = new List<Enemy>(10); 
-            LevelTranslator(levelDesign);
             playerStartPosition = new Vector2(0.1f, 0.85f);
+            levelPlatforms = new List<Platform>(10);
+            enemies = new List<Enemy>(10);
+            LevelTranslator(levelDesign);
+            
+
+            SetLevelMessages(levelIdentifier);
         }
 
+        /// <summary>
+        /// Properties for private fields
+        /// </summary>
+        public List<Platform> Levelplatforms
+        {
+            get { return levelPlatforms; }
+        }
+        public List<Enemy> Enemies
+        {
+            get { return enemies; }
+        }
+
+        public Player Player
+        {
+            get { return player; }
+        }
+        public LevelExit LevelExit
+        {
+            get { return levelExit; }
+        }
+        public Vector2 LevelStartPosition
+        {
+            get { return playerStartPosition; }
+        }
+
+        public List<Message> LevelMessages
+        {
+            get { return levelMessages; }
+        }
+        //End of properties
+
+        /// <summary>
+        /// Translates a multidimensional char array to level objects
+        /// </summary>
+        /// <param name="levelDesign">char[,] that is being translated</param>
         private void LevelTranslator(char[,] levelDesign)
         {
             isBuildingPlatform = false;
+            levelHasExit = false;
 
             LevelDeadZone = levelDesign.GetLength(0);
             
@@ -72,57 +113,95 @@ namespace NinjaBox.Model
                             if (j == levelDesign.GetLength(1) - 1 && levelDesign[i, j] == '-' || levelDesign[i, j + 1] != '-')
                             {
                                 platformXEndPoint = (j + 1) / 10f;
-                                levelPlatforms.Add(new Platform(platformStartPoint, platformXEndPoint, platformStart - j + 1));
+                                levelPlatforms.Add(new Platform(platformStartPoint, platformXEndPoint, j - platformStart + 1)); //platformStart - j + 1
                                 isBuildingPlatform = false;
                                 platformStart = 0;
                             }
                             break;
 
 
-                        case '<':
-                            enemies.Add(new Enemy(new Vector2(j / 10f, (i - modelYCordModifier) / 10f), Direction.Left));
-                            break;
-
+                        case '<': 
                         case '>':
-                            enemies.Add(new Enemy(new Vector2(j / 10f, (i - modelYCordModifier) / 10f), Direction.Right));
+                            
+                            Direction enemyDirection;
+                            if (levelDesign[i, j] == '>')
+                            {
+                                enemyDirection = Direction.Right;
+                            }
+                            else
+                            {
+                                enemyDirection = Direction.Left;
+                            }
+                            if (levelDesign[i, j + 1] == '/' || levelDesign[i, j + 1] == '%')
+                            {
+                                char patrolType = levelDesign[i, j + 1];
+                                int counter = 1;
+                                while (levelDesign[i, j + counter] == patrolType)
+                                {
+                                    counter += 1;
+                                }
+                                
+                                enemies.Add(new Enemy(new Vector2(j / 10f, (i - modelYCordModifier) / 10f), enemyDirection, (j + counter) / 10f, patrolType == '/'));
+                            }
+                            else
+                            {
+                                enemies.Add(new Enemy(new Vector2(j / 10f, (i - modelYCordModifier) / 10f), enemyDirection));
+                            }
+                            
                             break;
 
 
 
                         case '*':
-                            levelExit = new LevelExit(new Vector2(j / 10f, (i - modelYCordModifier) / 10f));
-                            break;
+                            if (!levelHasExit)
+                            {
+                                levelHasExit = true;
+                                levelExit = new LevelExit(new Vector2(j / 10f, (i - modelYCordModifier) / 10f));
+                            }
+                            else
+                            {
+                                throw new Exception("A level can only have 1 exit.");
+                            }                            
+                            break;   
+                    
 
-                        
+                        case '+':
+                            playerStartPosition = new Vector2(j/10f + player.Size.X /2, (i - modelYCordModifier)/10f + player.Size.Y/2);
+                            break;
                     }
                 }
-            }     
+            }
         }
 
         /// <summary>
-        /// Properties for private fields
+        /// 
         /// </summary>
-        public List<Platform> Levelplatforms
+        /// <param name="levelIdentifier"></param>
+        private void SetLevelMessages(int levelIdentifier)
         {
-            get { return levelPlatforms; }
-        }
-        public List<Enemy> Enemies
-        {
-            get { return enemies; }
+            //NOTE: each case has to initiate the levelMessages List, I dont want empty lists on each level just hanging around.
+            switch (levelIdentifier)
+            {
+                case 0:
+                    levelMessages = new List<Message>(5);
+
+                    levelMessages.Add(new Message("Move around with the left and right arrow keys.", new Vector2(0.1f, 0.65f)));
+                    levelMessages.Add(new Message("And jump with space bar.", new Vector2(0.2f, 0.75f)));
+                    levelMessages.Add(new Message("Beware of these guys, enter their detection area and you lose.", new Vector2(0.6f, 0.1f)));
+                    levelMessages.Add(new Message("LEAP OF FAITH!", new Vector2(1.2f, -0.3f)));
+                    levelMessages.Add(new Message("You can attack using the 'V' key, ", new Vector2(2.6f, 0.1f)));
+                    levelMessages.Add(new Message("you will allways attack in the direction you last faced", new Vector2(2.6f, 0.15f)));
+                    levelMessages.Add(new Message("Tutorial complete, there will be more to learn in the real game.", new Vector2(2.8f, -0.3f)));
+                    break;
+            }
         }
 
-        public Player Player
+        
+
+
+        public void RemoveEnemy(Enemy e)
         {
-            get { return player; }
+            enemies.Remove(e);
         }
-        public LevelExit LevelExit
-        {
-            get { return levelExit; }
-        }
-        public Vector2 LevelStartPosition
-        {
-            get { return playerStartPosition; }
-        }
-       
     }
 }

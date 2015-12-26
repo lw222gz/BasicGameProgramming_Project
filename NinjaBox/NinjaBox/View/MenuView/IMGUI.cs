@@ -10,18 +10,14 @@ using System.Text;
 
 namespace NinjaBox.View
 {
-    public enum ButtonType
-    {
-        Restart,
-        Play,
-        Resume,
-        None
-    }
+    
     class IMGUI : MainView
     {
         private Button button;
         private List<Button> activeButtons;
         private Button RestartButton;
+        private Button PlayGameButton;
+        private Button PlayTutorialButton;
 
         //private ButtonType currentMenu;
         //private GameMenu gameMenu;
@@ -30,8 +26,7 @@ namespace NinjaBox.View
         {
             activeButtons = new List<Button>(3);
             //gameMenu = new GameMenu(content);
-            //currentMenu = ButtonType.None;   
-            
+            //currentMenu = ButtonType.None;               
         }
 
         public List<Button> ActiveButtons
@@ -45,8 +40,16 @@ namespace NinjaBox.View
         public void LoadButtons()
         {
             RestartButton = new Button(new Vector2(700, 200),
-                                        content.Load<Texture2D>("RestartButtonNormal.png"),
-                                        content.Load<Texture2D>("RestartButtonHover.png"));
+                                        content.Load<Texture2D>("ButtonImages/RestartButtonNormal.png"),
+                                        content.Load<Texture2D>("ButtonImages/RestartButtonHover.png"));
+
+            PlayGameButton = new Button(new Vector2(700, 200),
+                                        content.Load<Texture2D>("ButtonImages/PlayGameNormalButton.png"),
+                                        content.Load<Texture2D>("ButtonImages/PlayGameHoverButton.png"));
+
+            PlayTutorialButton = new Button(new Vector2(700, 500),
+                                            content.Load<Texture2D>("ButtonImages/PlayTutorialNormalButton.png"),
+                                            content.Load<Texture2D>("ButtonImages/PlayTutorialHoverButton.png"));
         }
 
         public bool doButton(ButtonType buttonType)
@@ -91,6 +94,11 @@ namespace NinjaBox.View
             return button.IsButtonClicked && button.IsMouseOver;         
         }
 
+        /// <summary>
+        /// Gets the value for a current button type
+        /// </summary>
+        /// <param name="buttonType">buttontype that is requested to get</param>
+        /// <returns>requested button type</returns>
         private Button getButtonValue(ButtonType buttonType)
         {
             switch (buttonType)
@@ -98,18 +106,35 @@ namespace NinjaBox.View
                 case ButtonType.Restart:
                     return RestartButton;
                    
- 
+                case ButtonType.Play:
+                    return PlayGameButton;
+
+                case ButtonType.PlayTutorial:
+                    return PlayTutorialButton;
+
                 default: 
                     return button;
             }
         }
 
+        /// <summary>
+        /// overwrites old values for a buttontype
+        /// </summary>
+        /// <param name="buttonType">buttontype that is gonna be overwritten</param>
         private void setButtonValue(ButtonType buttonType)
         {
             switch (buttonType)
             {
                 case ButtonType.Restart:
                     RestartButton = button;
+                    break;
+
+                case ButtonType.Play:
+                    PlayGameButton = button;
+                    break;
+
+                case ButtonType.PlayTutorial:
+                    PlayTutorialButton = button;
                     break;
             }
         }
@@ -119,6 +144,7 @@ namespace NinjaBox.View
         /// </summary>
         public void DrawMenu()
         {
+            //TODO: Change so the position is by default x: 700 and y : 200 and then any button after that gets +300 in Y led
             foreach (Button b in activeButtons)
             {
                 spriteBatch.Draw(b.ActiveTexture,

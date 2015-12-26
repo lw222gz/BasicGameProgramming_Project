@@ -20,11 +20,13 @@ namespace NinjaBox.View
         private EnemyView enemyView;
         private PlayerView playerView;
         private LevelExitView levelExitView;
+        private MessagesView messageView;
         private IMGUI imgui;
 
         private Texture2D menuBackgroundTexture;
         private Texture2D backGroundTexture;
-        private Vector2 backGroundPosition;
+        private Texture2D backGroundWinTexture;
+        private Texture2D activeBackgroundTexture;
 
         /// <summary>
         /// default constructor
@@ -43,20 +45,23 @@ namespace NinjaBox.View
             content = _content;
             
             this.imgui = imgui;
-            //need to load all buttons here when the protected content varible has gotten it's value
+            //need to load all buttons here when the protected static content field has gotten it's value
             imgui.LoadButtons();
 
             playerView = new PlayerView();
             platformView = new PlatformView();
             enemyView = new EnemyView();
             levelExitView = new LevelExitView();
+            messageView = new MessagesView();
 
             menuBackgroundTexture = content.Load<Texture2D>("MenuBackground.png");
             backGroundTexture = content.Load<Texture2D>("GameBackground.png");
-            backGroundPosition = new Vector2(0, 0);
+            backGroundWinTexture = content.Load<Texture2D>("WinBackgroundPlaceholder.png");
+
+            activeBackgroundTexture = backGroundTexture;
         }
 
-        public void DrawGame(Level level)
+        public void DrawGame(Level level, float elapsedTime)
         {
             //updates the camera offset so the screen follows the player
             camera.UpdateCameraOffset(level.Player, level.LevelExit);
@@ -64,19 +69,28 @@ namespace NinjaBox.View
             spriteBatch.Begin();
 
             //The background allways have the same model coords as the camera offset
-            spriteBatch.Draw(backGroundTexture, camera.getVisualCords(camera.CameraOffSet), Color.White);
-            
-           
+            if (level.Player.HasFinishedGame)
+            {
+                activeBackgroundTexture = backGroundWinTexture;
+            }            
+            spriteBatch.Draw(activeBackgroundTexture, camera.getVisualCords(camera.CameraOffSet), Color.White);
+
+            //if the level has any messages they are drawn
+            if (level.LevelMessages != null)
+            {
+                messageView.DrawMessages(level.LevelMessages);
+            }
 
             //calls on draw functions for level objects
-            enemyView.DrawEnemies(level.Enemies);
+            enemyView.DrawEnemies(level.Enemies, elapsedTime);
 
 
             platformView.DrawPlatforms(level.Levelplatforms);
 
-            
 
             levelExitView.DrawExit(level.LevelExit);
+           
+
             playerView.DrawPlayer(level.Player);
 
 

@@ -13,7 +13,10 @@ namespace NinjaBox.View.GameObjectsView
     class PlatformView : MainView
     {
         //private Camera camera;
-        private Texture2D platFormTexture;
+        private Texture2D platformMiddlePartTexture;
+        private Texture2D platformLeftEndTexture;
+        private Texture2D platformRightEndTexture;
+        private Texture2D platformLoneTexture;
         //private SpriteBatch spriteBatch;
 
         /// <summary>
@@ -21,7 +24,10 @@ namespace NinjaBox.View.GameObjectsView
         /// </summary>
         public PlatformView() 
         {
-            platFormTexture = content.Load<Texture2D>("PlatformPiecePlaceholder.png");
+            platformMiddlePartTexture = content.Load<Texture2D>("PlatformImages/PlatformMiddlePiece.png");
+            platformLeftEndTexture = content.Load<Texture2D>("PlatformImages/LeftPlatformEnd.png");
+            platformRightEndTexture = content.Load<Texture2D>("PlatformImages/RightPlatformEnd.png");
+            platformLoneTexture = content.Load<Texture2D>("PlatformImages/Loneplatform.png"); 
         }
         /// <summary>
         /// Draws all the platforms for a level
@@ -31,18 +37,47 @@ namespace NinjaBox.View.GameObjectsView
         {
             foreach (Platform p in platForms)
             {
-                for (int i = 0; i < p.AmountOfViewPlatforms; i++)
+                if (p.AmountOfViewPlatforms > 1)
                 {
-                    spriteBatch.Draw(platFormTexture,
-                                    camera.getVisualCords(p.StartPosition, i * p.PlatformViewSize.X), 
-                                    null, 
-                                    Color.White, 
-                                    0, 
-                                    Vector2.Zero, 
-                                    1, 
-                                    SpriteEffects.None, 
+                    for (int i = 0; i < p.AmountOfViewPlatforms; i++)
+                    {
+                        Texture2D currentTexture;
+                        if (i == 0)
+                        {
+                            currentTexture = platformLeftEndTexture;
+                        }
+                        else if (i == p.AmountOfViewPlatforms - 1)
+                        {
+                            currentTexture = platformRightEndTexture;
+                        }
+                        else
+                        {
+                            currentTexture = platformMiddlePartTexture;
+                        }
+                        spriteBatch.Draw(currentTexture,
+                                        camera.getVisualCords(p.StartPosition, i * p.PlatformViewSize.X),
+                                        null,
+                                        Color.White,
+                                        0,
+                                        Vector2.Zero,
+                                        1,
+                                        SpriteEffects.None,
+                                        0f);
+                    }
+                }
+                else
+                {
+                    spriteBatch.Draw(platformLoneTexture,
+                                    camera.getVisualCords(p.StartPosition),
+                                    null,
+                                    Color.White,
+                                    0,
+                                    Vector2.Zero,
+                                    1,
+                                    SpriteEffects.None,
                                     0f);
                 }
+                
             }
         }
     }

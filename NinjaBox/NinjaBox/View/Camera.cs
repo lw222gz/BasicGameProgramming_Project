@@ -53,15 +53,15 @@ namespace NinjaBox.View
             return new Vector2((size.X * ScreenWidth) / texture.Bounds.Width, (size.Y * ScreenHeight) / texture.Bounds.Height);
         }
 
+        //updates the camera offset depending on the player position and if the player is close to the level exit
         public void UpdateCameraOffset(Player player, LevelExit levelExit)
         {
             if (player.Position.X >= 0.5f)
             {
                 if (!(player.Position.X + 0.5f >= levelExit.Position.X + levelExit.Size.X / 2))
                 {
-                    cameraOffset.X = (player.Position.X - 0.5f);// * ScreenWidth;
-                }
-                
+                    cameraOffset.X = (player.Position.X - 0.5f);
+                }                
             }
             else 
             { 
@@ -70,7 +70,7 @@ namespace NinjaBox.View
 
             if (player.Position.Y <= 0.3f)
             {
-                cameraOffset.Y = (player.Position.Y - 0.3f);// * ScreenHeight;
+                cameraOffset.Y = (player.Position.Y - 0.3f);
             }
             else 
             { 

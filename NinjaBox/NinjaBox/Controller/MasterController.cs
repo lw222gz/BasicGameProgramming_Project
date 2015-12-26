@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using NinjaBox.Controller;
 using NinjaBox.Model;
 using NinjaBox.View;
+using NinjaBox.View.MenuView;
 
 namespace NinjaBox
 {
@@ -12,7 +13,9 @@ namespace NinjaBox
     /// </summary>
     public class MasterController : Game
     {
-        GraphicsDeviceManager graphics;
+        private GameState gameState;
+
+        GraphicsDeviceManager graphics;   
 
         private GameLevels gameLevels;
         private GameController gameController;
@@ -27,7 +30,15 @@ namespace NinjaBox
             graphics.PreferredBackBufferWidth = 1400;
             graphics.ApplyChanges();
 
+            gameState = GameState.MainMenu;
+
             Content.RootDirectory = "Content";
+        }
+        
+        //The enum should only be abel to get set values from other classes
+        public GameState SetGameState
+        {
+            set { gameState = value; }
         }
 
         /// <summary>
@@ -51,9 +62,10 @@ namespace NinjaBox
         {
             imgui = new IMGUI();
             gameLevels = new GameLevels();
-            gameController = new GameController(gameLevels);
+            gameController = new GameController(gameLevels, this);
             mainView = new MainView(GraphicsDevice, Content, imgui);
-            
+
+            this.IsMouseVisible = true;      
         }
 
         /// <summary>
@@ -76,30 +88,56 @@ namespace NinjaBox
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) { 
                 Exit();
             }
-            if (!gameController.ActiveLevel.Player.IsPlayerDead && !gameController.IsGamePaused)
+            switch (gameState)
             {
-                if (Keyboard.GetState().IsKeyDown(Keys.Left))
-                {
-                    gameController.ActiveLevel.Player.PlayerWantsToMoveLeft = true;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Right))
-                {
-                    gameController.ActiveLevel.Player.PlayerWantsToMoveRight = true;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Space) && gameController.ActiveLevel.Player.PlayerCanJump)
-                {
-                    gameController.ActiveLevel.Player.PlayerJump();
-                }
+                case GameState.Restart:
+                        if (imgui.doButton(ButtonType.Restart))
+                        {
+                            gameController.RestartLevel();
+                            gameState = GameState.Running;
+                        }
+                    break;
 
-                
-            }
-            else if(gameController.ActiveLevel.Player.IsPlayerDead)
-            {
-                this.IsMouseVisible = true;
-                if (imgui.doButton(ButtonType.Restart))
-                {
-                    gameController.RestartLevel();
-                }
+                case GameState.MainMenu:
+                    if (imgui.doButton(ButtonType.Play))
+                    {
+                        gameController.SetFirstGameLevel();
+                        gameState = GameState.Running;
+                    }
+                    if (imgui.doButton(ButtonType.PlayTutorial))
+                    {
+                        gameController.SetTutorialLevel();
+                        gameState = GameState.Running;
+                    }
+                    break;
+
+                case GameState.Running:
+                        //movement horizontal
+                        if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                        {
+                            gameController.ActiveLevel.Player.PlayerWantsToMoveLeft();
+                        }
+                        if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                        {
+                            gameController.ActiveLevel.Player.PlayerWantsToMoveRight();
+                        }
+
+                        //Jumping
+                        if (Keyboard.GetState().IsKeyDown(Keys.Space) && gameController.ActiveLevel.Player.PlayerCanJump)
+                        {
+                            gameController.ActiveLevel.Player.PlayerJump((float)gameTime.ElapsedGameTime.TotalSeconds);
+                        }
+                        if (!gameController.ActiveLevel.Player.PlayerCanJump && Keyboard.GetState().IsKeyUp(Keys.Space))
+                        {
+                            gameController.ActiveLevel.Player.ReduceJump();
+                        }
+
+                        //Attack
+                        if (!gameController.ActiveLevel.Player.PlayerIsAttacking && Keyboard.GetState().IsKeyDown(Keys.V))
+                        {
+                            gameController.PlayerAttack((float)gameTime.ElapsedGameTime.TotalSeconds);
+                        }
+                    break;
             }
 
             if (!gameController.IsGamePaused)
@@ -119,7 +157,7 @@ namespace NinjaBox
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            mainView.DrawGame(gameController.ActiveLevel);
+            mainView.DrawGame(gameController.ActiveLevel, (float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Draw(gameTime);
         }

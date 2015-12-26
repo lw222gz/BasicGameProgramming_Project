@@ -19,7 +19,8 @@ namespace NinjaBox.View.GameObjectsView
 
         public void DrawExit(LevelExit levelExit)
         {
-            spriteBatch.Draw(levelExitTexture, camera.getVisualCords(levelExit.Position), 
+            spriteBatch.Draw(levelExitTexture, 
+                            camera.getVisualCords(levelExit.Position), 
                             null, 
                             Color.White, 
                             0f, 

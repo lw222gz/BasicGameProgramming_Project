@@ -14,16 +14,20 @@ namespace NinjaBox.Controller
     {
         private Level activeLevel;
         private GameLevels gameLevels;
+        private GameCollisions gameCollisions;
+        private MasterController masterController;
         private int CurrentLevel;
 
         private bool isGamePaused;
 
-        private int Counter;
+        private bool PlayerIsOnPlatfrom;
 
-        public GameController(GameLevels gameLevels)
+        public GameController(GameLevels gameLevels, MasterController masterController)
         {
             CurrentLevel = 1;
             this.gameLevels = gameLevels;
+            this.masterController = masterController;
+            gameCollisions = new GameCollisions();
             setCurrentGameLevel();
             isGamePaused = false;
         }
@@ -44,15 +48,15 @@ namespace NinjaBox.Controller
 
             //-- Platform collision and checks if a player is on a platform, if so the player can jump
             //TODO: refactor this functionality, I feel like there is alot of ways this can be done better but for now Ill leave it like this.
-            Counter = 0;
+            PlayerIsOnPlatfrom = false;
             foreach (Platform p in activeLevel.Levelplatforms)
             {
-                if (!activeLevel.Player.CheckPlatformCollision(p))
+                if (gameCollisions.CheckPlatformCollision(p))
                 {
-                    Counter += 1;
+                    PlayerIsOnPlatfrom = true;
                 }
             }
-            if (Counter == activeLevel.Levelplatforms.Count)
+            if (!PlayerIsOnPlatfrom)
             {
                 activeLevel.Player.PlayerCantJump();
             }
@@ -62,25 +66,43 @@ namespace NinjaBox.Controller
             }
             //-- 
 
-            foreach (Enemy e in activeLevel.Enemies)
+            for (int i = 0; i < activeLevel.Enemies.Count; i++)
             {
-                activeLevel.Player.CheckEnemyCollision(e);
-                if (activeLevel.Player.IsPlayerDetected(e))
+                
+
+                //checks if the player is too close or is detected by an enemy
+                gameCollisions.CheckEnemyCollision(activeLevel.Enemies[i]);
+
+                if (gameCollisions.IsPlayerDetected(activeLevel.Enemies[i]))
                 {
-                    activeLevel.Player.PlayerDead();
+                    PlayerDied();
+                    activeLevel.Enemies[i].KilledPlayer(activeLevel.Player.Position);
                 }
-                e.Update(ElapsedTime);
+                activeLevel.Enemies[i].Update(ElapsedTime);    
+
+                //checks if the player has hit an enemy
+                if (activeLevel.Player.PlayerIsAttacking && gameCollisions.CheckPlayerAttackArea(activeLevel.Enemies[i]))
+                {
+                    activeLevel.RemoveEnemy(activeLevel.Enemies[i]);
+                }
+                           
             }
+
+
             if (activeLevel.Player.Position.Y - activeLevel.Player.Size.Y / 2 > 1)
             {
-                activeLevel.Player.PlayerDead();
+                PlayerDied();
             }
 
             //checks if the player reached the end of the level
-            if (activeLevel.Player.IsLevelCompleted(activeLevel.LevelExit))
+            if (activeLevel.LevelExit != null && gameCollisions.IsLevelCompleted(activeLevel.LevelExit))
             {
+                if (CurrentLevel == 0)
+                {
+                    masterController.SetGameState = GameState.MainMenu;
+                }
                 CurrentLevel += 1;
-                activeLevel = gameLevels.getCurrentLevel(CurrentLevel);
+                activeLevel = gameLevels.getCurrentLevel(CurrentLevel);                
             }
         }
 
@@ -93,11 +115,35 @@ namespace NinjaBox.Controller
             activeLevel = gameLevels.getCurrentLevel(CurrentLevel);
         }
 
-
+        /// <summary>
+        /// Kills the player 
+        /// </summary>
+        private void PlayerDied()
+        {
+            masterController.SetGameState = GameState.Restart;
+        }
         //restarts the current level
         public void RestartLevel()
         {
             activeLevel = gameLevels.ResetLevel(CurrentLevel);
+        }
+
+        public void PlayerAttack(float elapsedTime)
+        {
+            activeLevel.Player.PlayerAttack();
+        }
+
+
+        public void SetTutorialLevel()
+        {
+            CurrentLevel = 0;
+            setCurrentGameLevel();
+        }
+
+        public void SetFirstGameLevel()
+        {
+            CurrentLevel = 1;
+            setCurrentGameLevel();
         }
     }
 }

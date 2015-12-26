@@ -6,29 +6,42 @@ using System.Text;
 
 namespace NinjaBox.Model.GameObjects
 {
+    
     class Player
     {
-        private Vector2 position;
-        private Vector2 velocity;
-        private Vector2 size = new Vector2(0.1f, 0.1f);
+        //protected fields that are used in the gameCollision script
+        protected static Vector2 position;
+        protected static Vector2 size = new Vector2(0.1f, 0.1f);
+        protected static Vector2 velocity;
+        protected static Vector2 attackRange = new Vector2(0.05f, 0.025f);
+        protected static Direction playerDirection;
+        
         private float Speed = 0.3f;
         private Vector2 Gravity = new Vector2(0f, 0.7f);
         private bool playerWantsToMoveRight;
         private bool playerWantsToMoveLeft;
-        private bool isPlayerDead;
+
+        private bool playerIsAttacking;
+        private bool hasFinishedGame;
+        //measured in seconds
+        private const float attackDurotation = 1f;
+        private float attackLasted;
+        
 
         private bool playerCanJump;
         public Player()
         {
             playerWantsToMoveLeft = false;
             playerWantsToMoveRight = false;
+            playerIsAttacking = false;
+            hasFinishedGame = false;
 
-            isPlayerDead = false;
+            playerDirection = Direction.Right;
             position = new Vector2(0.1f, 0.85f);
             velocity = new Vector2(0f, 0f);
         }
 
-        //Properties
+        //Properties for private fields
         public Vector2 Position
         {
             get { return position; }
@@ -36,26 +49,27 @@ namespace NinjaBox.Model.GameObjects
         public Vector2 Size
         {
             get { return size; }
-        }
-
-        public bool PlayerWantsToMoveLeft
-        {
-            get { return playerWantsToMoveLeft; }
-            set { playerWantsToMoveLeft = value; }
-        }
-        public bool PlayerWantsToMoveRight
-        {
-            get { return playerWantsToMoveRight; }
-            set { playerWantsToMoveRight = value; }
-        }
+        }  
         public bool PlayerCanJump
         {
             get { return playerCanJump; }
         }
-
-        public bool IsPlayerDead
+        public bool PlayerIsAttacking
         {
-            get { return isPlayerDead; }
+            get { return playerIsAttacking; }
+        }
+        public Direction PlayerDirection 
+        { 
+            get { return playerDirection; } 
+        }
+
+        public Vector2 AttackRange
+        {
+            get { return attackRange; }
+        }
+        public bool HasFinishedGame
+        {
+            get { return hasFinishedGame; }
         }
 
         /// <summary>
@@ -64,18 +78,42 @@ namespace NinjaBox.Model.GameObjects
         /// <param name="elapsedTime"></param>
         public void Update(float elapsedTime)
         {
+            if (playerIsAttacking)
+            {
+                attackLasted += elapsedTime;
+                if (attackLasted >= attackDurotation)
+                {
+                    StopPlayerAttack();
+                }
+            }
             if (playerWantsToMoveLeft)
             {
+                //if the player changes direction any current attack will also be interupted.
+                if (playerDirection == Direction.Right)
+                {
+                    StopPlayerAttack();
+                    playerDirection = Direction.Left;
+                }
+                
                 position.X -= elapsedTime * Speed;
             }
             if (playerWantsToMoveRight)
             {
+                //if the player changes direction any current attack will also be interupted.
+                if (playerDirection == Direction.Left)
+                {
+                    StopPlayerAttack();
+                    playerDirection = Direction.Right;
+                }
+                
                 position.X += elapsedTime * Speed;
             }
 
             //make the player jump and become affected by gravity
             position.Y += velocity.Y * elapsedTime;
             velocity.Y += Gravity.Y * elapsedTime;
+            //velocity is at maximum 1, if it is let to increase constantly the pull 
+            //will end up too great and just pull the player through the ground
             if (velocity.Y >= 1)
             {
                 velocity.Y = 1;
@@ -85,120 +123,76 @@ namespace NinjaBox.Model.GameObjects
             playerWantsToMoveRight = false;
         }
 
-        public void PlayerJump()
+        //initiates a jump
+        public void PlayerJump(float elapsedTime)
         {
-            playerCanJump = false;
             velocity.Y = -Gravity.Y - 0.1f;
         }
-
-        public void SetPlayerPosition(Vector2 position)
+        //This is called if the player releases the space bar during a jump to reduce the height of the jump
+        public void ReduceJump()
         {
-            this.position = position;
-        }
-
-        public void Restart(Vector2 position)
-        {
-            isPlayerDead = false;
-            SetPlayerPosition(position);
+            // If character is still ascending in the jump
+            if (velocity.Y < -Gravity.Y / 2 - 0.1f)
+            {
+                velocity.Y = -Gravity.Y / 2 - 0.1f;
+            }
         }
         
-        //TODO: Right now all of the collision code is in the player scirpt. Could be broken out to it's own script
 
-        //checks the collision for platforms
-        public bool CheckPlatformCollision(Platform platform)
+        /// <summary>
+        /// Force set the position of a player, only used atm when initiating a level
+        /// </summary>
+        /// <param name="_position">model coords of the position that is gonna be set</param>
+        public void SetPlayerPosition(Vector2 _position)
         {
-            if(position.Y + (size.Y /2) >=  platform.StartPosition.Y &&
-                position.Y + (size.Y / 2) <= platform.StartPosition.Y + platform.PlatformViewSize.Y &&
-                position.X >= platform.StartPosition.X && 
-                position.X <= platform.EndXPosition && 
-                velocity.Y >= 0)
-            {
-                //When the player lands on a platform the jump is re-enabled
-                position.Y = platform.StartPosition.Y - size.Y/2;
-                return true;
-            }
-            return false;
+            position = _position;
+        }       
+
+        //Is called when the player has completed the game.
+        public void CompletedGame()
+        {
+            hasFinishedGame = true;
         }
 
-        //checks if the player is too close to the enemies backs, if so they turn around to then be killed.
-        //NOTE: This function does not cause the player to die. If the robots turn the method IsPlayerDetected will kill them.
-        //WHY: If I want to add a detection timer, let's say if the player is within the detection area for 0.4 seconds THEN the player dies. Thus I dont want to kill the player via this method.
-        public void CheckEnemyCollision(Enemy enemy)
+        /// <summary>
+        /// Initiates an attack
+        /// </summary>
+        public void PlayerAttack()
         {
-            if (enemy.EnemyDirection == Direction.Left)
-            {
-                if (position.X - size.X / 2 <= enemy.Position.X + (enemy.Size.X / 2) &&
-                   position.X - size.X / 2 >= enemy.Position.X &&
-                   position.Y + (size.Y / 2) <= enemy.Position.Y + (enemy.Size.Y / 2) &&
-                   position.Y - (size.Y / 2) >= enemy.Position.Y - (enemy.Size.Y / 2))
-                {
-                    enemy.ChangeDirection();
-                }
-            }
-            else
-            {
-                if (position.X + size.X / 2 >= enemy.Position.X - (enemy.Size.X / 2) &&
-                   position.X + size.X / 2 <= enemy.Position.X &&
-                   position.Y + (size.Y / 2) <= enemy.Position.Y + (enemy.Size.Y / 2) &&
-                   position.Y - (size.Y / 2) >= enemy.Position.Y - (enemy.Size.Y / 2))
-                {
-                    enemy.ChangeDirection();
-                }
-            }
+            playerIsAttacking = true;
         }
 
-        //checks if the player is within the detection area for an enemy. If so the player dies instantly.
-        public bool IsPlayerDetected(Enemy enemy)
+        /// <summary>
+        /// interupts any current attack
+        /// </summary>
+        private void StopPlayerAttack()
         {
-            if(enemy.EnemyDirection == Direction.Left){
-                if (position.X + (size.X / 2) >= enemy.DetectionAreaPosition.X &&
-                   position.X + (size.X / 2) <= enemy.Position.X && 
-                   position.Y <= enemy.Position.Y + (enemy.Size.Y / 2) + enemy.DetectionAreaYDownLed &&
-                   position.Y >= enemy.DetectionAreaPosition.Y)
-                {
-                    return true;
-                }               
-            }
-            else
-            {
-                if (position.X - (size.X / 2) <= enemy.Position.X + (enemy.Size.X / 2) + enemy.DetectionAreaXLed &&
-                   position.X - (size.X / 2) >= enemy.Position.X &&
-                   position.Y <= enemy.Position.Y + (enemy.Size.Y / 2) + enemy.DetectionAreaYDownLed &&
-                   position.Y >= enemy.Position.Y - (enemy.Size.Y / 2) - enemy.DetectionAreaYUpLed)
-                {
-                    return true;
-                }  
-            }
-            
-            return false;
+            playerIsAttacking = false;
+            attackLasted = 0;
         }
 
-        public bool IsLevelCompleted(LevelExit levelExit)
+        //booleans that control the player movements
+        public void PlayerWantsToMoveLeft()
         {
-            if(position.X >= levelExit.Position.X + levelExit.Size.X/2 &&
-               position.Y <= levelExit.Position.Y + levelExit.Size.Y/2 && 
-               position.Y >= levelExit.Position.Y - levelExit.Size.Y/2)
-            {                
-                return true;
-            }
-
-            return false;
+            playerWantsToMoveLeft = true;
         }
+        public void PlayerWantsToMoveRight()
+        {
+            playerWantsToMoveRight = true;
+        }
+        //--
 
-        //changes values for private fields
+        //These 2 are called form the gameController, 
+        //if the player is on a platform then the player can initiate a new jump
         public void SetPlayerCanJump()
         {
             playerCanJump = true;
         }
+        //if a player is not on a platform, then the player cant initiate a new jump
         public void PlayerCantJump()
         {
             playerCanJump = false;
         }
-        public void PlayerDead()
-        {
-            isPlayerDead = true;
-        }
-
-        
+        //--
     }
 }

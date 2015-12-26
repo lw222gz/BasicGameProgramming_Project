@@ -10,13 +10,7 @@ namespace NinjaBox.Model.GameObjects
     {
         private Vector2 startPosition;
         private float endXPosition;
-        private Vector2 size;
 
-        /// <summary>
-        /// To not streatch out the platform image Ill reuse it several times.
-        /// so the view size of a platform is 0.5 x 0.1 in model cords while the model platform is the size of the given start and end position.
-        /// </summary>
-        //private Vector2 platformSize = new Vector2(0.5f, 0.1f);
         private Vector2 platformSize = new Vector2(0.1f, 0.1f);
         private int amountOfViewPlatforms;
 
@@ -40,10 +34,6 @@ namespace NinjaBox.Model.GameObjects
         {
             get { return platformSize; }
         }
-        public Vector2 Size
-        {
-            get { return size; }
-        }
         public int AmountOfViewPlatforms
         {
             get { return amountOfViewPlatforms; }
@@ -58,9 +48,5 @@ namespace NinjaBox.Model.GameObjects
         {
             return;
         }
-
-
-
-
     }
 }

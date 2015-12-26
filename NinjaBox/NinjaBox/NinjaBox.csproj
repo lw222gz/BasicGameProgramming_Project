@@ -39,10 +39,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Controller\GameController.cs" />
+    <Compile Include="Controller\GameStateEnum.cs" />
     <Compile Include="Controller\MasterController.cs" />
+    <Compile Include="Model\GameCollisions.cs" />
     <Compile Include="Model\GameLevels.cs" />
     <Compile Include="Model\GameObjects\Enemy.cs" />
+    <Compile Include="Model\GameObjects\DirectionEnum.cs" />
     <Compile Include="Model\GameObjects\LevelExit.cs" />
+    <Compile Include="Model\GameObjects\Message.cs" />
     <Compile Include="Model\GameObjects\Platform.cs" />
     <Compile Include="Model\GameObjects\Player.cs" />
     <Compile Include="Model\Level.cs" />
@@ -51,9 +55,11 @@
     <Compile Include="View\Camera.cs" />
     <Compile Include="View\GameObjectsView\EnemyView.cs" />
     <Compile Include="View\GameObjectsView\LevelExitView.cs" />
+    <Compile Include="View\GameObjectsView\MessagesView.cs" />
     <Compile Include="View\GameObjectsView\PlatformView.cs" />
     <Compile Include="View\GameObjectsView\PlayerView.cs" />
     <Compile Include="View\MenuView\Button.cs" />
+    <Compile Include="View\MenuView\ButtonTypeEnum.cs" />
     <Compile Include="View\MenuView\IMGUI.cs" />
     <Compile Include="View\MainView.cs" />
   </ItemGroup>
@@ -65,6 +71,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\BulletPlaceholder.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ButtonImages\PlayGameHoverButton.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ButtonImages\PlayGameNormalButton.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ButtonImages\PlayTutorialHoverButton.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ButtonImages\PlayTutorialNormalButton.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\PlatformImages\LeftPlatformEnd.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\PlatformImages\RightPlatformEnd.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Enemy.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -80,19 +107,28 @@
     <Content Include="Content\MenuBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Platform.png">
+    <Content Include="Content\PlatformImages\LonePlatform.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\PlatformPiecePlaceholder.png">
+    <Content Include="Content\PlaceholderAttack.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Platform.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Player.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\RestartButtonHover.png">
+    <Content Include="Content\ButtonImages\RestartButtonHover.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\RestartButtonNormal.png">
+    <Content Include="Content\ButtonImages\RestartButtonNormal.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\PlatformImages\PlatformMiddlePiece.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\WinBackgroundPlaceholder.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />
@@ -100,7 +136,6 @@
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -20,6 +20,9 @@ namespace NinjaBox.Model.GameObjects
         public LevelExit(Vector2 position)
         {
             this.position = position;
+            //adjustments to the position due to the exit not being same size as displayed on the levelMakerGrid
+            this.position.Y -= 0.087f;
+            this.position.X += 0.025f;
         }
 
         public Vector2 Position
