@@ -49,8 +49,8 @@ namespace NinjaBox.Model
             {
                 if (position.X + (size.X / 2) >= enemy.DetectionAreaPosition.X &&
                    position.X + size.X / 2  <= enemy.Position.X + enemy.Size.X / 4 &&
-                   position.Y <= enemy.Position.Y + (enemy.Size.Y / 2) + enemy.DetectionAreaYDownLed &&
-                   position.Y >= enemy.DetectionAreaPosition.Y)
+                   position.Y - size.Y/2 <= enemy.Position.Y + (enemy.Size.Y / 2) + enemy.DetectionAreaYDownLed &&
+                   position.Y + size.Y/2 >= enemy.DetectionAreaPosition.Y)
                 {
                     return true;
                 }
@@ -59,8 +59,8 @@ namespace NinjaBox.Model
             {
                 if (position.X - (size.X / 2) <= enemy.Position.X + (enemy.Size.X / 2) + enemy.DetectionAreaXLed &&
                    position.X - (size.X / 2) >= enemy.Position.X - enemy.Size.X / 4 &&
-                   position.Y <= enemy.Position.Y + (enemy.Size.Y / 2) + enemy.DetectionAreaYDownLed &&
-                   position.Y >= enemy.Position.Y - (enemy.Size.Y / 2) - enemy.DetectionAreaYUpLed)
+                   position.Y - size.Y / 2<= enemy.Position.Y + (enemy.Size.Y / 2) + enemy.DetectionAreaYDownLed &&
+                   position.Y + size.Y/2>= enemy.Position.Y - (enemy.Size.Y / 2) - enemy.DetectionAreaYUpLed)
                 {
                     return true;
                 }
@@ -91,8 +91,8 @@ namespace NinjaBox.Model
         //checks the collision for platforms
         public bool CheckPlatformCollision(Platform platform)
         {
-            if (position.Y + (size.Y / 2) >= platform.StartPosition.Y &&
-                position.Y + (size.Y / 2) <= platform.StartPosition.Y + platform.PlatformViewSize.Y &&
+            if (position.Y + size.Y/2 >= platform.StartPosition.Y &&
+                position.Y <= platform.StartPosition.Y &&
                 position.X >= platform.StartPosition.X &&
                 position.X <= platform.EndXPosition &&
                 velocity.Y >= 0)

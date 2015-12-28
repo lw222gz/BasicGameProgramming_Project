@@ -18,6 +18,8 @@ namespace NinjaBox.View
         private Button RestartButton;
         private Button PlayGameButton;
         private Button PlayTutorialButton;
+        private Button MainMenuButton;
+        private Button ResumeButton;
 
         //private ButtonType currentMenu;
         //private GameMenu gameMenu;
@@ -39,17 +41,29 @@ namespace NinjaBox.View
         /// </summary>
         public void LoadButtons()
         {
-            RestartButton = new Button(new Vector2(700, 200),
+            //restart menu
+            RestartButton = new Button(new Vector2(0.2f, 0.2f),
                                         content.Load<Texture2D>("ButtonImages/RestartButtonNormal.png"),
                                         content.Load<Texture2D>("ButtonImages/RestartButtonHover.png"));
 
-            PlayGameButton = new Button(new Vector2(700, 200),
+            //main menu
+            PlayGameButton = new Button(new Vector2(0.8f, 0.2f),
                                         content.Load<Texture2D>("ButtonImages/PlayGameNormalButton.png"),
                                         content.Load<Texture2D>("ButtonImages/PlayGameHoverButton.png"));
 
-            PlayTutorialButton = new Button(new Vector2(700, 500),
+            PlayTutorialButton = new Button(new Vector2(0.8f, 0.5f),
                                             content.Load<Texture2D>("ButtonImages/PlayTutorialNormalButton.png"),
                                             content.Load<Texture2D>("ButtonImages/PlayTutorialHoverButton.png"));
+
+            //pause menu
+            MainMenuButton = new Button(new Vector2(0.8f, 0.2f),
+                                    content.Load<Texture2D>("ButtonImages/MainMenuButtonNormal.png"),
+                                    content.Load<Texture2D>("ButtonImages/MainMenuButtonHover.png"));
+
+            ResumeButton = new Button(new Vector2(0.8f, 0.5f),
+                                    content.Load<Texture2D>("ButtonImages/ResumeButtonNormal.png"),
+                                    content.Load<Texture2D>("ButtonImages/ResumeButtonHover.png"));
+
         }
 
         public bool doButton(ButtonType buttonType)
@@ -58,12 +72,14 @@ namespace NinjaBox.View
 
             button = getButtonValue(buttonType);
 
+            Vector2 buttonVisualCords = camera.getVisualCords(button.Position + camera.CameraOffSet);
+
             button.IsMouseOver = false;
             button.IsButtonClicked = false;
-            if (mouseState.X >= button.Position.X - button.ButtonWidth / 2 &&
-                mouseState.X <= button.Position.X + button.ButtonWidth / 2 &&
-                mouseState.Y >= button.Position.Y - button.ButtonHeigth / 2 &&
-                mouseState.Y <= button.Position.Y + button.ButtonHeigth / 2)
+            if (mouseState.X >= buttonVisualCords.X - button.ButtonWidth / 2 &&
+                mouseState.X <= buttonVisualCords.X + button.ButtonWidth / 2 &&
+                mouseState.Y >= buttonVisualCords.Y - button.ButtonHeigth / 2 &&
+                mouseState.Y <= buttonVisualCords.Y + button.ButtonHeigth / 2)
             {
                 button.ActiveTexture = button.HoverButtonImage;
                 button.IsMouseOver = true;
@@ -112,6 +128,12 @@ namespace NinjaBox.View
                 case ButtonType.PlayTutorial:
                     return PlayTutorialButton;
 
+                case ButtonType.Resume:
+                    return ResumeButton;
+
+                case ButtonType.MainMenu:
+                    return MainMenuButton;
+
                 default: 
                     return button;
             }
@@ -136,6 +158,16 @@ namespace NinjaBox.View
                 case ButtonType.PlayTutorial:
                     PlayTutorialButton = button;
                     break;
+
+
+                case ButtonType.Resume:
+                    ResumeButton = button;
+                    break;
+
+
+                case ButtonType.MainMenu:
+                    MainMenuButton = button;
+                    break;
             }
         }
 
@@ -148,14 +180,14 @@ namespace NinjaBox.View
             foreach (Button b in activeButtons)
             {
                 spriteBatch.Draw(b.ActiveTexture,
-                            b.Position,
-                            null,
-                            Color.White,
-                            0f,
-                            new Vector2(b.ActiveTexture.Bounds.Width / 2, b.ActiveTexture.Bounds.Height / 2),
-                            1f,
-                            SpriteEffects.None,
-                            0);
+                                camera.getVisualCords(b.Position + camera.CameraOffSet),
+                                null,
+                                Color.White,
+                                0f,
+                                new Vector2(b.ActiveTexture.Bounds.Width / 2, b.ActiveTexture.Bounds.Height / 2),
+                                1f,
+                                SpriteEffects.None,
+                                0);
             }
 
             //clears the list as it will be refilled with buttons in the next update

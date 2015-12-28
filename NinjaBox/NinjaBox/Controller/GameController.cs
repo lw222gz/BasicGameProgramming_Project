@@ -1,5 +1,6 @@
 ﻿using NinjaBox.Model;
 using NinjaBox.Model.GameObjects;
+using NinjaBox.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,15 +17,17 @@ namespace NinjaBox.Controller
         private GameLevels gameLevels;
         private GameCollisions gameCollisions;
         private MasterController masterController;
+        private MainView mainView;
         private int CurrentLevel;
 
         private bool isGamePaused;
 
         private bool PlayerIsOnPlatfrom;
 
-        public GameController(GameLevels gameLevels, MasterController masterController)
+        public GameController(GameLevels gameLevels, MainView mainView ,MasterController masterController)
         {
             CurrentLevel = 1;
+            this.mainView = mainView;
             this.gameLevels = gameLevels;
             this.masterController = masterController;
             gameCollisions = new GameCollisions();
@@ -46,6 +49,11 @@ namespace NinjaBox.Controller
         {
             activeLevel.Player.Update(ElapsedTime);
 
+            foreach (Enemy e in activeLevel.Enemies)
+            {
+                e.Update(ElapsedTime);
+            }
+
             //-- Platform collision and checks if a player is on a platform, if so the player can jump
             //TODO: refactor this functionality, I feel like there is alot of ways this can be done better but for now Ill leave it like this.
             PlayerIsOnPlatfrom = false;
@@ -66,43 +74,49 @@ namespace NinjaBox.Controller
             }
             //-- 
 
-            for (int i = 0; i < activeLevel.Enemies.Count; i++)
+            //Statements only checked if the player is alive.
+            if (activeLevel.Player.IsAlive)
             {
-                
+                //Checks all enemy collison, attacking, gets detected or if the player gets too close
+                for (int i = 0; i < activeLevel.Enemies.Count; i++)
+                {
+                    //checks if the player is too close or is detected by an enemy
+                    gameCollisions.CheckEnemyCollision(activeLevel.Enemies[i]);
 
-                //checks if the player is too close or is detected by an enemy
-                gameCollisions.CheckEnemyCollision(activeLevel.Enemies[i]);
+                    if (gameCollisions.IsPlayerDetected(activeLevel.Enemies[i]))
+                    {
+                        PlayerDied();
+                        activeLevel.Player.ReduceJump();
+                        activeLevel.Enemies[i].KilledPlayer(activeLevel.Player.Position);
+                        //Visual effect for shooting the player
+                        mainView.ShootPlayer(activeLevel.Enemies[i], activeLevel.Player);
+                    }
+                    
 
-                if (gameCollisions.IsPlayerDetected(activeLevel.Enemies[i]))
+                    //checks if the player has hit an enemy
+                    if (activeLevel.Player.PlayerIsAttacking && gameCollisions.CheckPlayerAttackArea(activeLevel.Enemies[i]))
+                    {
+                        activeLevel.RemoveEnemy(activeLevel.Enemies[i]);
+                    }
+
+                }
+
+                //if the player is under the level the player dies
+                if (activeLevel.Player.Position.Y - activeLevel.Player.Size.Y / 2 > 1)
                 {
                     PlayerDied();
-                    activeLevel.Enemies[i].KilledPlayer(activeLevel.Player.Position);
                 }
-                activeLevel.Enemies[i].Update(ElapsedTime);    
 
-                //checks if the player has hit an enemy
-                if (activeLevel.Player.PlayerIsAttacking && gameCollisions.CheckPlayerAttackArea(activeLevel.Enemies[i]))
+                //checks if the player reached the end of the level
+                if (activeLevel.LevelExit != null && gameCollisions.IsLevelCompleted(activeLevel.LevelExit))
                 {
-                    activeLevel.RemoveEnemy(activeLevel.Enemies[i]);
+                    if (CurrentLevel == 0)
+                    {
+                        masterController.SetGameState = GameState.MainMenu;
+                    }
+                    CurrentLevel += 1;
+                    activeLevel = gameLevels.getCurrentLevel(CurrentLevel);
                 }
-                           
-            }
-
-
-            if (activeLevel.Player.Position.Y - activeLevel.Player.Size.Y / 2 > 1)
-            {
-                PlayerDied();
-            }
-
-            //checks if the player reached the end of the level
-            if (activeLevel.LevelExit != null && gameCollisions.IsLevelCompleted(activeLevel.LevelExit))
-            {
-                if (CurrentLevel == 0)
-                {
-                    masterController.SetGameState = GameState.MainMenu;
-                }
-                CurrentLevel += 1;
-                activeLevel = gameLevels.getCurrentLevel(CurrentLevel);                
             }
         }
 
@@ -120,6 +134,7 @@ namespace NinjaBox.Controller
         /// </summary>
         private void PlayerDied()
         {
+            activeLevel.Player.PlayerDead();
             masterController.SetGameState = GameState.Restart;
         }
         //restarts the current level

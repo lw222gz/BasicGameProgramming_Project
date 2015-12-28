@@ -8,6 +8,7 @@ namespace NinjaBox.Controller
     public enum GameState
     {
         Running,
+        Pause,
         MainMenu,
         Restart,
         Tutorial

@@ -23,6 +23,7 @@ namespace NinjaBox.Model.GameObjects
 
         private bool playerIsAttacking;
         private bool hasFinishedGame;
+        private bool isAlive;
         //measured in seconds
         private const float attackDurotation = 1f;
         private float attackLasted;
@@ -31,6 +32,7 @@ namespace NinjaBox.Model.GameObjects
         private bool playerCanJump;
         public Player()
         {
+            isAlive = true;
             playerWantsToMoveLeft = false;
             playerWantsToMoveRight = false;
             playerIsAttacking = false;
@@ -62,7 +64,6 @@ namespace NinjaBox.Model.GameObjects
         { 
             get { return playerDirection; } 
         }
-
         public Vector2 AttackRange
         {
             get { return attackRange; }
@@ -70,6 +71,14 @@ namespace NinjaBox.Model.GameObjects
         public bool HasFinishedGame
         {
             get { return hasFinishedGame; }
+        }
+        public Vector2 Velocity
+        {
+            get { return velocity; }
+        }
+        public bool IsAlive
+        {
+            get { return isAlive; }
         }
 
         /// <summary>
@@ -194,5 +203,15 @@ namespace NinjaBox.Model.GameObjects
             playerCanJump = false;
         }
         //--
+
+        public void PlayerDead()
+        {
+            isAlive = false;
+        }
+
+        public void Alive()
+        {
+            isAlive = true;
+        }
     }
 }

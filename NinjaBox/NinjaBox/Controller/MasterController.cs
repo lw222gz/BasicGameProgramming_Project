@@ -61,9 +61,9 @@ namespace NinjaBox
         protected override void LoadContent()
         {
             imgui = new IMGUI();
-            gameLevels = new GameLevels();
-            gameController = new GameController(gameLevels, this);
+            gameLevels = new GameLevels();           
             mainView = new MainView(GraphicsDevice, Content, imgui);
+            gameController = new GameController(gameLevels, mainView, this);
 
             this.IsMouseVisible = true;      
         }
@@ -137,10 +137,28 @@ namespace NinjaBox
                         {
                             gameController.PlayerAttack((float)gameTime.ElapsedGameTime.TotalSeconds);
                         }
+
+                        if (Keyboard.GetState().IsKeyDown(Keys.P))
+                        {
+                            gameState = GameState.Pause;
+                        }
+                    break;
+
+
+                case GameState.Pause:
+                    if (imgui.doButton(ButtonType.Resume))
+                    {
+                        gameState = GameState.Running;
+                    }
+                    if (imgui.doButton(ButtonType.MainMenu))
+                    {
+                        gameState = GameState.MainMenu;
+                        gameController.SetFirstGameLevel();
+                    }
                     break;
             }
 
-            if (!gameController.IsGamePaused)
+            if (gameState != GameState.Pause)
             {
                 gameController.UpdateGame((float)gameTime.ElapsedGameTime.TotalSeconds);
             }

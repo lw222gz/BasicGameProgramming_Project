@@ -132,17 +132,24 @@ namespace NinjaBox.Model
                             {
                                 enemyDirection = Direction.Left;
                             }
-                            if (levelDesign[i, j + 1] == '/' || levelDesign[i, j + 1] == '%')
+                            if (j + 1 < levelDesign.GetLength(1))
                             {
-                                char patrolType = levelDesign[i, j + 1];
-                                int counter = 1;
-                                while (levelDesign[i, j + counter] == patrolType)
+                                if (levelDesign[i, j + 1] == '/' || levelDesign[i, j + 1] == '%')
                                 {
-                                    counter += 1;
+                                    char patrolType = levelDesign[i, j + 1];
+                                    int counter = 1;
+                                    while (levelDesign[i, j + counter] == patrolType)
+                                    {
+                                        counter += 1;
+                                    }
+
+                                    enemies.Add(new Enemy(new Vector2(j / 10f, (i - modelYCordModifier) / 10f), enemyDirection, (j + counter) / 10f, patrolType == '/'));
                                 }
-                                
-                                enemies.Add(new Enemy(new Vector2(j / 10f, (i - modelYCordModifier) / 10f), enemyDirection, (j + counter) / 10f, patrolType == '/'));
-                            }
+                                else
+                                {
+                                    enemies.Add(new Enemy(new Vector2(j / 10f, (i - modelYCordModifier) / 10f), enemyDirection));
+                                }
+                            }                                                        
                             else
                             {
                                 enemies.Add(new Enemy(new Vector2(j / 10f, (i - modelYCordModifier) / 10f), enemyDirection));
@@ -183,15 +190,31 @@ namespace NinjaBox.Model
             switch (levelIdentifier)
             {
                 case 0:
-                    levelMessages = new List<Message>(5);
+                    levelMessages = new List<Message>(11);
 
-                    levelMessages.Add(new Message("Move around with the left and right arrow keys.", new Vector2(0.1f, 0.65f)));
-                    levelMessages.Add(new Message("And jump with space bar.", new Vector2(0.2f, 0.75f)));
-                    levelMessages.Add(new Message("Beware of these guys, enter their detection area and you lose.", new Vector2(0.6f, 0.1f)));
-                    levelMessages.Add(new Message("LEAP OF FAITH!", new Vector2(1.2f, -0.3f)));
-                    levelMessages.Add(new Message("You can attack using the 'V' key, ", new Vector2(2.6f, 0.1f)));
-                    levelMessages.Add(new Message("you will allways attack in the direction you last faced", new Vector2(2.6f, 0.15f)));
-                    levelMessages.Add(new Message("Tutorial complete, there will be more to learn in the real game.", new Vector2(2.8f, -0.3f)));
+                    levelMessages.Add(new Message("Move around with the left and right arrow keys.", new Vector2(.1f, .65f)));
+                    levelMessages.Add(new Message("And jump by holding down space bar.", new Vector2(.2f, .7f)));
+
+                    levelMessages.Add(new Message("Beware of these guys, enter their detection area and you lose.", new Vector2(.6f, .1f)));
+
+                    levelMessages.Add(new Message("LEAP OF FAITH!", new Vector2(1.2f, -.3f)));
+
+                    levelMessages.Add(new Message("You can attack using the 'V' key, ", new Vector2(2.6f, .1f)));
+                    levelMessages.Add(new Message("you will allways attack in the direction you last moved.", new Vector2(2.6f, .15f)));
+
+                    levelMessages.Add(new Message("Be careful not too get too close to their backs.", new Vector2(2f, -.25f)));
+                    levelMessages.Add(new Message("Getting too close will cause them to sense you", new Vector2(2.0f, -.20f)));
+                    levelMessages.Add(new Message("and turn around.", new Vector2(2, -.15f)));
+
+                    levelMessages.Add(new Message("Tutorial complete! Remember that you can allways ", new Vector2(3.2f, -.3f)));
+                    levelMessages.Add(new Message("pause the game by pressing 'P'", new Vector2(3.2f, -.25f)));
+                    break;
+
+                    //LEVELMESSAGE FOR LEVEL 2, case 1 to test
+                case 1:
+                    levelMessages = new List<Message>(2);
+
+                    levelMessages.Add(new Message("Safe to fall straight down.", new Vector2(2.5f, -.2f)));
                     break;
             }
         }

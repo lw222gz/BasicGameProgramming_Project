@@ -28,8 +28,10 @@ namespace NinjaBox.Model.GameObjects
         private float patrolPointA;
         private float speed = 0.1f;
         private bool shouldTurn;
+
+
         private bool hasKilledPlayer;
-        private Vector2 shotLocation;
+        private Vector2 shotDirection;
 
 
 
@@ -100,9 +102,9 @@ namespace NinjaBox.Model.GameObjects
         {
             get { return hasKilledPlayer; }
         }
-        public Vector2 ShotLocation
+        public Vector2 ShotDirection
         {
-            get { return shotLocation; }
+            get { return shotDirection; }
         }
 
         
@@ -174,13 +176,14 @@ namespace NinjaBox.Model.GameObjects
             setDetectionArea();
         }
 
-        //sets values required when shooting the player
+        /// <summary>
+        /// sets values required when shooting the player
+        /// </summary>
+        /// <param name="shotLocation">location where the player got shot</param>
         public void KilledPlayer(Vector2 shotLocation)
         {
             hasKilledPlayer = true;
-            this.shotLocation = shotLocation;
-            ///CONTINUE HERE! 
-            ///Maby use linear algebra to decide the bullets speed x and y led?
+            this.shotDirection = shotLocation;
         }
     }
 }

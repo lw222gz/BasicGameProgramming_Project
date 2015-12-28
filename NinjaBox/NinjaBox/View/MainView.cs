@@ -2,7 +2,9 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using NinjaBox.Model;
+using NinjaBox.Model.GameObjects;
 using NinjaBox.View.GameObjectsView;
+using NinjaBox.View.VisualEffects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,7 @@ namespace NinjaBox.View
         protected static SpriteBatch spriteBatch;
         protected static ContentManager content;
 
+        //View classes for game objects
         private PlatformView platformView;
         private EnemyView enemyView;
         private PlayerView playerView;
@@ -23,10 +26,16 @@ namespace NinjaBox.View
         private MessagesView messageView;
         private IMGUI imgui;
 
+        //Main textures
         private Texture2D menuBackgroundTexture;
         private Texture2D backGroundTexture;
         private Texture2D backGroundWinTexture;
         private Texture2D activeBackgroundTexture;
+
+
+        //Special visual effects that can be executed on command  
+        //List of all ingame visual effects
+        private List<IEffect> visualEffects;
 
         /// <summary>
         /// default constructor
@@ -59,6 +68,8 @@ namespace NinjaBox.View
             backGroundWinTexture = content.Load<Texture2D>("WinBackgroundPlaceholder.png");
 
             activeBackgroundTexture = backGroundTexture;
+
+            visualEffects = new List<IEffect>(5);
         }
 
         public void DrawGame(Level level, float elapsedTime)
@@ -82,10 +93,21 @@ namespace NinjaBox.View
             }
 
             //calls on draw functions for level objects
-            enemyView.DrawEnemies(level.Enemies, elapsedTime);
+            foreach (Enemy e in level.Enemies)
+            {
+                enemyView.DrawEnemies(e);
+            }
 
+            for (int i = 0; i < visualEffects.Count; i++)
+            {
+                visualEffects[i].RunEffect(elapsedTime);
+                if (visualEffects[i].IsEffectOver)
+                {
 
-            platformView.DrawPlatforms(level.Levelplatforms);
+                }
+            }
+
+                platformView.DrawPlatforms(level.Levelplatforms);
 
 
             levelExitView.DrawExit(level.LevelExit);
@@ -104,6 +126,11 @@ namespace NinjaBox.View
             spriteBatch.End();
 
             
+        }
+
+        public void ShootPlayer(Enemy enemy, Player player)
+        {
+            visualEffects.Add(new EnemyShootingPlayerEffect(enemy, player.Velocity, player.PlayerCanJump));
         }
     }
 }

@@ -11,6 +11,7 @@ namespace NinjaBox.View.MenuView
         Play,
         PlayTutorial,
         Resume,
+        MainMenu,
         None
     }
 }
