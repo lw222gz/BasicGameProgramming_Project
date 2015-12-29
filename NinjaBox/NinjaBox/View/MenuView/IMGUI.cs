@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -20,6 +21,9 @@ namespace NinjaBox.View
         private Button PlayTutorialButton;
         private Button MainMenuButton;
         private Button ResumeButton;
+        private Button CreditsButton;
+
+        private SoundEffect buttonClickSound;
 
         //private ButtonType currentMenu;
         //private GameMenu gameMenu;
@@ -39,7 +43,7 @@ namespace NinjaBox.View
         /// <summary>
         /// Loads all button objects
         /// </summary>
-        public void LoadButtons()
+        public void LoadResources()
         {
             //restart menu
             RestartButton = new Button(new Vector2(0.2f, 0.2f),
@@ -55,6 +59,11 @@ namespace NinjaBox.View
                                             content.Load<Texture2D>("ButtonImages/PlayTutorialNormalButton.png"),
                                             content.Load<Texture2D>("ButtonImages/PlayTutorialHoverButton.png"));
 
+            CreditsButton = new Button(new Vector2(0.8f, 0.8f),
+                                        content.Load<Texture2D>("ButtonImages/CreditButtonNormal"),
+                                        content.Load<Texture2D>("ButtonImages/CreditButtonHover"));
+
+
             //pause menu
             MainMenuButton = new Button(new Vector2(0.8f, 0.2f),
                                     content.Load<Texture2D>("ButtonImages/MainMenuButtonNormal.png"),
@@ -63,6 +72,9 @@ namespace NinjaBox.View
             ResumeButton = new Button(new Vector2(0.8f, 0.5f),
                                     content.Load<Texture2D>("ButtonImages/ResumeButtonNormal.png"),
                                     content.Load<Texture2D>("ButtonImages/ResumeButtonHover.png"));
+
+            buttonClickSound = content.Load<SoundEffect>("MenuClick");
+
 
         }
 
@@ -92,6 +104,8 @@ namespace NinjaBox.View
                 {
                     button.IsButtonClicked = true;
                     button.OldMouseState = ButtonState.Released;
+                    //Button click sound effect
+                    buttonClickSound.Play();
                 }
             }
             else
@@ -103,7 +117,6 @@ namespace NinjaBox.View
 
 
             setButtonValue(buttonType);
-
 
             activeButtons.Add(button);
 
@@ -133,6 +146,9 @@ namespace NinjaBox.View
 
                 case ButtonType.MainMenu:
                     return MainMenuButton;
+
+                case ButtonType.Credits:
+                    return CreditsButton;
 
                 default: 
                     return button;
@@ -167,6 +183,11 @@ namespace NinjaBox.View
 
                 case ButtonType.MainMenu:
                     MainMenuButton = button;
+                    break;
+
+
+                case ButtonType.Credits:
+                    CreditsButton = button;
                     break;
             }
         }

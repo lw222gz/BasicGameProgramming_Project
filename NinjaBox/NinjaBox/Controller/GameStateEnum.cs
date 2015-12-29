@@ -11,6 +11,7 @@ namespace NinjaBox.Controller
         Pause,
         MainMenu,
         Restart,
+        CreditsDisplay,
         Tutorial
     }
 }

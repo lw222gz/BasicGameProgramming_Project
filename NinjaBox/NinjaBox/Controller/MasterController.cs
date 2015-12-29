@@ -109,6 +109,10 @@ namespace NinjaBox
                         gameController.SetTutorialLevel();
                         gameState = GameState.Running;
                     }
+                    if (imgui.doButton(ButtonType.Credits))
+                    {
+                        gameState = GameState.CreditsDisplay;
+                    }
                     break;
 
                 case GameState.Running:
@@ -156,8 +160,18 @@ namespace NinjaBox
                         gameController.SetFirstGameLevel();
                     }
                     break;
+
+
+
+                case GameState.CreditsDisplay:
+                    if (imgui.doButton(ButtonType.MainMenu))
+                    {
+                        gameState = GameState.MainMenu;
+                    }
+                    break;
             }
 
+            //if the gameState is not paused the game should keep updating.
             if (gameState != GameState.Pause)
             {
                 gameController.UpdateGame((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -176,7 +190,10 @@ namespace NinjaBox
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             mainView.DrawGame(gameController.ActiveLevel, (float)gameTime.ElapsedGameTime.TotalSeconds);
-
+            if (gameState == GameState.CreditsDisplay)
+            {
+                mainView.DisplayCredits();
+            }
             base.Draw(gameTime);
         }
     }

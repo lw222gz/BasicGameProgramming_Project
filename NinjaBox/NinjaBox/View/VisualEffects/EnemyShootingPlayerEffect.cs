@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using NinjaBox.Model.GameObjects;
 using NinjaBox.View.GameObjectsView;
@@ -21,7 +22,7 @@ namespace NinjaBox.View.VisualEffects
         private List<EnemyBullet> bullets;
 
         private Texture2D bulletTexture;
-
+        private SoundEffect bulletShotSound;
         public EnemyShootingPlayerEffect(Enemy enemy, Vector2 playerVelocity, bool playerCanJump)
         {
             this.enemy = enemy;
@@ -34,11 +35,12 @@ namespace NinjaBox.View.VisualEffects
 
 
             bulletTexture = content.Load<Texture2D>("BulletPlaceholder.png");
+            bulletShotSound = content.Load<SoundEffect>("GunShot");
         }
 
         public bool IsEffectOver
         {
-            get { return false; }
+            get { return shootDurotation == .25f; }
         }
 
         public void RunEffect(float timeElapsed)
@@ -53,6 +55,7 @@ namespace NinjaBox.View.VisualEffects
             if (shootDurotation >= nextShootMark)
             {
                 bullets.Add(new EnemyBullet(enemy, playerVelocity, playerCanJump));
+                bulletShotSound.Play();
                 nextShootMark += bulletShootInterval;
             }
 

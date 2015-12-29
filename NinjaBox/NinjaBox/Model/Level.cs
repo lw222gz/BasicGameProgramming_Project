@@ -210,11 +210,11 @@ namespace NinjaBox.Model
                     levelMessages.Add(new Message("pause the game by pressing 'P'", new Vector2(3.2f, -.25f)));
                     break;
 
-                    //LEVELMESSAGE FOR LEVEL 2, case 1 to test
-                case 1:
+               
+                case 2:
                     levelMessages = new List<Message>(2);
 
-                    levelMessages.Add(new Message("Safe to fall straight down.", new Vector2(2.5f, -.2f)));
+                    levelMessages.Add(new Message("The following area is in construction", new Vector2(2.5f, -.3f)));
                     break;
             }
         }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using NinjaBox.Model;
 using NinjaBox.Model.GameObjects;
 using NinjaBox.View.GameObjectsView;
@@ -17,6 +19,10 @@ namespace NinjaBox.View
         protected static Camera camera;
         protected static SpriteBatch spriteBatch;
         protected static ContentManager content;
+
+        private Song backgroundMusic;
+        private SoundEffect EnemyDiesSound;
+        private SoundEffect playerFallSound;
 
         //View classes for game objects
         private PlatformView platformView;
@@ -55,7 +61,7 @@ namespace NinjaBox.View
             
             this.imgui = imgui;
             //need to load all buttons here when the protected static content field has gotten it's value
-            imgui.LoadButtons();
+            imgui.LoadResources();
 
             playerView = new PlayerView();
             platformView = new PlatformView();
@@ -66,6 +72,13 @@ namespace NinjaBox.View
             menuBackgroundTexture = content.Load<Texture2D>("MenuBackground.png");
             backGroundTexture = content.Load<Texture2D>("GameBackground.png");
             backGroundWinTexture = content.Load<Texture2D>("WinBackgroundPlaceholder.png");
+
+            EnemyDiesSound = content.Load<SoundEffect>("EnemyDies");
+            playerFallSound = content.Load<SoundEffect>("WilhelmScream");
+            backgroundMusic = content.Load<Song>("StealthGroover");
+
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(backgroundMusic);
 
             activeBackgroundTexture = backGroundTexture;
 
@@ -101,9 +114,10 @@ namespace NinjaBox.View
             for (int i = 0; i < visualEffects.Count; i++)
             {
                 visualEffects[i].RunEffect(elapsedTime);
+                //if the effect is over it is removed from, the list
                 if (visualEffects[i].IsEffectOver)
                 {
-
+                    visualEffects.Remove(visualEffects[i]);
                 }
             }
 
@@ -128,9 +142,43 @@ namespace NinjaBox.View
             
         }
 
+        //Initiates the visual effect of the enemy shooting the player.
         public void ShootPlayer(Enemy enemy, Player player)
         {
             visualEffects.Add(new EnemyShootingPlayerEffect(enemy, player.Velocity, player.PlayerCanJump));
+        }
+
+        //TODO -Add visual effect: small explosion
+        public void EnemyDead()
+        {
+            EnemyDiesSound.Play();
+        }
+
+        /// <summary>
+        /// Overlay draw for the credits, is called when the player wants to see the game credits
+        /// </summary>
+        public void DisplayCredits()
+        {
+            spriteBatch.Begin();
+
+            spriteBatch.Draw(menuBackgroundTexture, 
+                            camera.getVisualCords(new Vector2(0.1f, 0.1f) + camera.CameraOffSet), 
+                            null, 
+                            Color.Black, 
+                            0, 
+                            Vector2.Zero, 
+                            new Vector2(0.5f, 0.8f), 
+                            SpriteEffects.None, 
+                            0);
+            messageView.DrawCredits();
+
+            spriteBatch.End();
+        }
+
+        //Sound effect when the player falls to death
+        public void PlayerFall()
+        {
+            playerFallSound.Play();
         }
     }
 }

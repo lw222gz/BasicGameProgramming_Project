@@ -19,3 +19,39 @@
 /processorParam:TextureFormat=Compressed
 /build:NewSpriteFont.spritefont
 
+#begin MenuClick.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:MenuClick.wav
+
+#begin GunShot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:GunShot.wav
+
+#begin StealthGroover.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:StealthGroover.mp3
+
+#begin EnemyDies.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:EnemyDies.wav
+
+#begin creditFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:creditFont.spritefont
+
+#begin WilhelmScream.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:WilhelmScream.wav
+

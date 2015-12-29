@@ -16,17 +16,23 @@ namespace NinjaBox.Model.GameObjects
         protected static Vector2 attackRange = new Vector2(0.05f, 0.025f);
         protected static Direction playerDirection;
         
+        //movement affecting fields
         private float Speed = 0.3f;
         private Vector2 Gravity = new Vector2(0f, 0.7f);
         private bool playerWantsToMoveRight;
         private bool playerWantsToMoveLeft;
 
+        //Attack related fields
         private bool playerIsAttacking;
+        private const float attackDurotation = 1f;
+        private float attackLasted;
+
+        //state of played related fields
+        //TODO: add a playerState Enum, state could be: dead, alive, hasFinishedgame, stunned etc.
         private bool hasFinishedGame;
         private bool isAlive;
         //measured in seconds
-        private const float attackDurotation = 1f;
-        private float attackLasted;
+        
         
 
         private bool playerCanJump;
@@ -212,6 +218,13 @@ namespace NinjaBox.Model.GameObjects
         public void Alive()
         {
             isAlive = true;
+        }
+
+        //Resets values, this is called when reseting the game via the paus menu, not from dieing
+        public void Reset()
+        {
+            isAlive = true;
+            hasFinishedGame = false;
         }
     }
 }

@@ -97,6 +97,8 @@ namespace NinjaBox.Controller
                     if (activeLevel.Player.PlayerIsAttacking && gameCollisions.CheckPlayerAttackArea(activeLevel.Enemies[i]))
                     {
                         activeLevel.RemoveEnemy(activeLevel.Enemies[i]);
+                        //effect when enemy dies
+                        mainView.EnemyDead();
                     }
 
                 }
@@ -105,6 +107,8 @@ namespace NinjaBox.Controller
                 if (activeLevel.Player.Position.Y - activeLevel.Player.Size.Y / 2 > 1)
                 {
                     PlayerDied();
+                    //effect when player dies by falling down
+                    mainView.PlayerFall();
                 }
 
                 //checks if the player reached the end of the level
@@ -159,6 +163,7 @@ namespace NinjaBox.Controller
         {
             CurrentLevel = 1;
             setCurrentGameLevel();
+            activeLevel.Player.Reset();
         }
     }
 }
