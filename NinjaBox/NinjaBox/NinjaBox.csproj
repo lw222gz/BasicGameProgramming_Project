@@ -54,10 +54,10 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>1AFA5C0B6CC6749545DA854C02739A7A1EB5F474</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>086604B9B01A1D55B1D638229D1850FB0335CC5C</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>NinjaBox_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>NinjaBox_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -186,6 +186,7 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NinjaBox_1_TemporaryKey.pfx" />
     <None Include="NinjaBox_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

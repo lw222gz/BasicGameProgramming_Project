@@ -85,13 +85,13 @@ namespace NinjaBox
         protected override void Update(GameTime gameTime)
         {
             //TODO:Menu - have a enum GameState and defines the state of the game, paused, start menu, game over manu etc.
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) { 
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape)) { 
                 Exit();
             }
             switch (gameState)
             {
                 case GameState.Restart:
-                        if (imgui.doButton(ButtonType.Restart))
+                        if (imgui.doButton(ButtonType.Restart) || Keyboard.GetState().IsKeyDown(Keys.R))
                         {
                             gameController.RestartLevel();
                             gameState = GameState.Running;
