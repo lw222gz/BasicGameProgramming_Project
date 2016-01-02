@@ -1,4 +1,5 @@
 ﻿using NinjaBox.Model.GameObjects;
+using NinjaBox.Model.GameObjects.ObjectDefinedInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,10 @@ namespace NinjaBox.Model
     /// <summary>
     /// inherits from the player class since all collisions will have to do with the player
     /// </summary>
+
+
+    ///TODO: Read through all collition methods and see if some can be fused with the help of an interface.
+
     class GameCollisions : Player
     {
         //empty constructor due to the inheritance it's required
@@ -22,7 +27,7 @@ namespace NinjaBox.Model
             if (enemy.EnemyFaceDirection == Direction.Left)
             {
                 if (position.X - size.X / 2 <= enemy.Position.X + (enemy.Size.X / 2) &&
-                   position.X - size.X / 2 >= enemy.Position.X &&
+                   position.X >= enemy.Position.X &&
                    position.Y <= enemy.Position.Y + (enemy.Size.Y / 2) &&
                    position.Y >= enemy.Position.Y - (enemy.Size.Y / 2))
                 {
@@ -32,7 +37,7 @@ namespace NinjaBox.Model
             else
             {
                 if (position.X + size.X / 2 >= enemy.Position.X - (enemy.Size.X / 2) &&
-                   position.X + size.X / 2 <= enemy.Position.X &&
+                   position.X <= enemy.Position.X &&
                    position.Y <= enemy.Position.Y + (enemy.Size.Y / 2) &&
                    position.Y >= enemy.Position.Y - (enemy.Size.Y / 2))
                 {
@@ -48,7 +53,7 @@ namespace NinjaBox.Model
             if (enemy.EnemyFaceDirection == Direction.Left)
             {
                 if (position.X + (size.X / 2) >= enemy.DetectionAreaPosition.X &&
-                   position.X + size.X / 2  <= enemy.Position.X + enemy.Size.X / 4 &&
+                   position.X <= enemy.Position.X &&
                    position.Y - size.Y/2 <= enemy.Position.Y + (enemy.Size.Y / 2) + enemy.DetectionAreaYDownLed &&
                    position.Y + size.Y/2 >= enemy.DetectionAreaPosition.Y)
                 {
@@ -58,7 +63,7 @@ namespace NinjaBox.Model
             else
             {
                 if (position.X - (size.X / 2) <= enemy.Position.X + (enemy.Size.X / 2) + enemy.DetectionAreaXLed &&
-                   position.X - (size.X / 2) >= enemy.Position.X - enemy.Size.X / 4 &&
+                   position.X  >= enemy.Position.X &&
                    position.Y - size.Y / 2<= enemy.Position.Y + (enemy.Size.Y / 2) + enemy.DetectionAreaYDownLed &&
                    position.Y + size.Y/2>= enemy.Position.Y - (enemy.Size.Y / 2) - enemy.DetectionAreaYUpLed)
                 {
@@ -107,27 +112,47 @@ namespace NinjaBox.Model
         /// <summary>
         /// checks if the player has hit an enemy
         /// </summary>
-        /// <param name="e">enemy that is checked if hit</param>
+        /// <param name="obj">enemy that is checked if hit</param>
         /// <returns></returns>
-        public bool CheckPlayerAttackArea(Enemy e)
+        public bool CheckPlayerAttackArea(IisDestroyable obj)
         {
             float attackXMax; 
             float attackXMin; 
             if (playerDirection == Direction.Left)
             {
                 attackXMax = position.X - size.X / 2 - attackRange.X;
-                attackXMin = position.X - size.X / 2 - attackRange.X;
+                attackXMin = position.X - size.X / 2;
+
+                if (attackXMax <= obj.Position.X + obj.Size.X / 2 &&
+                    attackXMin >= obj.Position.X - obj.Size.X / 2 &&
+                    position.Y >= obj.Position.Y - obj.Size.Y / 2 &&
+                    position.Y <= obj.Position.Y + obj.Size.Y / 2)
+                {
+                    return true;
+                }
             }
             else
             {
                 attackXMax = position.X + size.X / 2 + attackRange.X;
-                attackXMin = position.X + size.X / 2 + attackRange.X;
-            }
+                attackXMin = position.X + size.X / 2;
 
-            if (attackXMin <= e.Position.X + e.Size.X / 2 && 
-                attackXMax >= e.Position.X - e.Size.X /2 &&
-                position.Y >= e.Position.Y - e.Size.Y / 2 && 
-                position.Y <= e.Position.Y + e.Size.Y / 2)
+                if (attackXMin <= obj.Position.X + obj.Size.X / 2 &&
+                    attackXMax >= obj.Position.X - obj.Size.X / 2 &&
+                    position.Y >= obj.Position.Y - obj.Size.Y / 2 &&
+                    position.Y <= obj.Position.Y + obj.Size.Y / 2)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool CheckCameraDetection(SecurityCamera securityCam)
+        {
+            if(position.X - size.X/2 <= securityCam.DetectionAreaPosition.X + securityCam.DetectionAreaSize.X / 2 &&
+                position.X + size.X / 2 >= securityCam.DetectionAreaPosition.X - securityCam.DetectionAreaSize.X / 2 &&
+                position.Y + size.Y/2 >= securityCam.DetectionAreaPosition.Y &&
+                position.Y - size.Y/2 <= securityCam.DetectionAreaPosition.Y + securityCam.DetectionAreaSize.Y)
             {
                 return true;
             }

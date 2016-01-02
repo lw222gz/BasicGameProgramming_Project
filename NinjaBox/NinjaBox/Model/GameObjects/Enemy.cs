@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using NinjaBox.Model.GameObjects.ObjectDefinedInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace NinjaBox.Model.GameObjects
 {
-    class Enemy
+    class Enemy : IisDestroyable
     {
         //indicates the direction the enemy is facing
         private Direction faceDirection;
@@ -14,7 +15,6 @@ namespace NinjaBox.Model.GameObjects
         private Direction movingDirection;
 
         private Vector2 position;
-        private Vector2 size = new Vector2(0.1f, 0.25f);
         private Vector2 detectionAreaPosition;
         //the detection area extends 0.35 logical cords infront of the enemy
         private const float detectionAreaXled = 0.35f;
@@ -42,19 +42,19 @@ namespace NinjaBox.Model.GameObjects
             hasKilledPlayer = false;
             this.position = position;
             //small adjustments to the position required due to the enemies take up more than 1 grid size-wise
-            this.position.Y -= size.Y / 10;
-            this.position.X += size.X / 2;
+            this.position.Y -= Size.Y / 10;
+            this.position.X += Size.X / 2;
             this.faceDirection = faceDirection;
 
             if (patrolPath != 0)
             {
-                this.patrolPointB = patrolPath - size.X / 2;
+                this.patrolPointB = patrolPath - Size.X / 2;
             }
             else
             {
                 this.patrolPointB = 0;
             }
-            this.patrolPointA = position.X + size.X / 2;
+            this.patrolPointA = position.X + Size.X / 2;
             this.shouldTurn = shouldTurn;            
             this.movingDirection = Direction.Right;  
             if(this.shouldTurn)
@@ -76,7 +76,7 @@ namespace NinjaBox.Model.GameObjects
         }
         public Vector2 Size
         {
-            get { return size; }
+            get { return new Vector2(0.1f, 0.25f); }
         }
         public Direction EnemyFaceDirection
         {
@@ -112,11 +112,11 @@ namespace NinjaBox.Model.GameObjects
         {
             if (faceDirection == Direction.Left)
             {                
-                detectionAreaPosition = new Vector2(this.position.X - detectionAreaXled - (size.X / 2), position.Y - detectionAreaYUpled - (size.Y / 2));
+                detectionAreaPosition = new Vector2(this.position.X - detectionAreaXled - (Size.X / 2), position.Y - detectionAreaYUpled - (Size.Y / 2));
             }
             else
             {
-                detectionAreaPosition = new Vector2(this.position.X + (size.X / 2), position.Y - detectionAreaYUpled - (size.Y / 2));
+                detectionAreaPosition = new Vector2(this.position.X + (Size.X / 2), position.Y - detectionAreaYUpled - (Size.Y / 2));
             }
         }
 

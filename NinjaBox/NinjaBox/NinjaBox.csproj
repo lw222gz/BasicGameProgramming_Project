@@ -75,12 +75,17 @@
     <Compile Include="Model\GameObjects\DirectionEnum.cs" />
     <Compile Include="Model\GameObjects\LevelExit.cs" />
     <Compile Include="Model\GameObjects\Message.cs" />
+    <Compile Include="Model\GameObjects\ObjectDefiningInterfaces\IisDestroyable.cs" />
     <Compile Include="Model\GameObjects\Platform.cs" />
     <Compile Include="Model\GameObjects\Player.cs" />
+    <Compile Include="Model\GameObjects\SecurityCamera.cs" />
+    <Compile Include="Model\GameObjects\PowerBox.cs" />
     <Compile Include="Model\Level.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\Camera.cs" />
+    <Compile Include="View\GameObjectsView\PowerBoxView.cs" />
+    <Compile Include="View\GameObjectsView\SecurityCameraView.cs" />
     <Compile Include="View\VisualEffects\VisualEffectsObjects\EnemyBullet.cs" />
     <Compile Include="View\GameObjectsView\EnemyView.cs" />
     <Compile Include="View\GameObjectsView\LevelExitView.cs" />
@@ -133,6 +138,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\ButtonImages\ResumeButtonNormal.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\CameraDetectionAreaPlaceholder.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\DestroyedPowerBoxPlaceholder.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\SecurityCameraPowerBoxPlaceholder.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\SecurityCameraPlaceholder.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\PlatformImages\LeftPlatformEnd.png">

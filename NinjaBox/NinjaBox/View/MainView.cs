@@ -30,6 +30,8 @@ namespace NinjaBox.View
         private PlayerView playerView;
         private LevelExitView levelExitView;
         private MessagesView messageView;
+        private PowerBoxView powerBoxView;
+        private SecurityCameraView securityCameraView;
         private IMGUI imgui;
 
         //Main textures
@@ -68,6 +70,8 @@ namespace NinjaBox.View
             enemyView = new EnemyView();
             levelExitView = new LevelExitView();
             messageView = new MessagesView();
+            powerBoxView = new PowerBoxView();
+            securityCameraView = new SecurityCameraView();
 
             menuBackgroundTexture = content.Load<Texture2D>("MenuBackground.png");
             backGroundTexture = content.Load<Texture2D>("GameBackground.png");
@@ -121,8 +125,11 @@ namespace NinjaBox.View
                 }
             }
 
-                platformView.DrawPlatforms(level.Levelplatforms);
+            platformView.DrawPlatforms(level.Levelplatforms);
 
+            securityCameraView.DrawSecurityCameras(level.LevelCameras);
+
+            powerBoxView.DrawPowerBoxes(level.LevelPowerBoxes);
 
             levelExitView.DrawExit(level.LevelExit);
            

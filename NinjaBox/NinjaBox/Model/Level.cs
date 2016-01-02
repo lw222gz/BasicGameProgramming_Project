@@ -10,6 +10,8 @@ namespace NinjaBox.Model
     class Level
     {
         private List<Platform> levelPlatforms;
+        private List<SecurityCamera> levelCameras;
+        private List<PowerBox> levelPowerBoxes;
         private List<Enemy> enemies;
         private List<Message> levelMessages;
         private Player player;
@@ -31,6 +33,9 @@ namespace NinjaBox.Model
             playerStartPosition = new Vector2(0.1f, 0.85f);
             levelPlatforms = new List<Platform>(10);
             enemies = new List<Enemy>(10);
+            //7 is the max amount of cameras for a level with the current build.
+            levelCameras = new List<SecurityCamera>(7);
+            levelPowerBoxes = new List<PowerBox>(7);
             LevelTranslator(levelDesign);
             
 
@@ -66,6 +71,17 @@ namespace NinjaBox.Model
         {
             get { return levelMessages; }
         }
+
+        public List<SecurityCamera> LevelCameras
+        {
+            get { return levelCameras; }
+        }
+
+        public List<PowerBox> LevelPowerBoxes
+        {
+            get { return levelPowerBoxes; }
+        }
+
         //End of properties
 
         /// <summary>
@@ -169,8 +185,23 @@ namespace NinjaBox.Model
                             {
                                 throw new Exception("A level can only have 1 exit.");
                             }                            
-                            break;   
-                    
+                            break; 
+  
+
+                        case '"':
+                        case '#':
+                        case '¤':
+                            levelCameras.Add(new SecurityCamera(new Vector2(j / 10f, (i - modelYCordModifier) / 10f), getCameraLinkId(levelDesign[i, j])));
+                                //add detection camera
+
+                            break;
+
+                        case '@':
+                        case '£':
+                        case '$':
+                                //add camera power box
+                            levelPowerBoxes.Add(new PowerBox(new Vector2(j / 10f, (i - modelYCordModifier) / 10f), getCameraLinkId(levelDesign[i, j])));
+                            break;
 
                         case '+':
                             playerStartPosition = new Vector2(j/10f + player.Size.X /2, (i - modelYCordModifier)/10f + player.Size.Y/2);
@@ -178,6 +209,30 @@ namespace NinjaBox.Model
                     }
                 }
             }
+        }
+
+        private int getCameraLinkId(char p)
+        {
+            //each case represents a shift-key value and a Alt Gr - key value for the number buttons
+            switch (p)
+            {
+                case '"':
+                case '@':
+                    return 2;
+
+                case '#':
+                case '£':
+                    return 3;
+
+                case '¤':
+                case '$':
+                    return 4;
+
+                default:
+                    //if a bugg occurs when a camera or powerbox has connection ID 0 the bugg lies here.
+                    return 0;
+            }
+            
         }
 
         /// <summary>
@@ -225,6 +280,16 @@ namespace NinjaBox.Model
         public void RemoveEnemy(Enemy e)
         {
             enemies.Remove(e);
+        }
+
+        /// <summary>
+        /// is called when a power box is destroyed
+        /// </summary>
+        /// <param name="powerBox">powerbox that is destroyed</param>
+        public void DestroyPowerBox(PowerBox powerBox)
+        {
+            //updates the cameras that might have been disabled
+            levelCameras = powerBox.DestroyPowerBox(levelCameras);            
         }
     }
 }

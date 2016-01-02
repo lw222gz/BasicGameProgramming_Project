@@ -99,8 +99,28 @@ namespace NinjaBox.Controller
                         activeLevel.RemoveEnemy(activeLevel.Enemies[i]);
                         //effect when enemy dies
                         mainView.EnemyDead();
-                    }
+                    } 
+                }
 
+                foreach (SecurityCamera securityCam in activeLevel.LevelCameras)
+                {
+                    if (securityCam.IsTurnedOn && gameCollisions.CheckCameraDetection(securityCam))
+                    {
+                        PlayerDied();
+                    }
+                }
+
+                for (int i = 0; i < activeLevel.LevelPowerBoxes.Count; i++)
+                {
+                    if (activeLevel.Player.PlayerIsAttacking)
+                    {
+                        int a = 5;
+                    }
+                    if (activeLevel.Player.PlayerIsAttacking && 
+                        gameCollisions.CheckPlayerAttackArea(activeLevel.LevelPowerBoxes[i]))
+                    {
+                        activeLevel.DestroyPowerBox(activeLevel.LevelPowerBoxes[i]);
+                    }
                 }
 
                 //if the player is under the level the player dies
