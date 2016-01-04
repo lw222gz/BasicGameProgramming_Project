@@ -21,8 +21,13 @@ namespace NinjaBox.View.VisualEffects
         private float nextShootMark;
         private List<EnemyBullet> bullets;
 
-        private Texture2D bulletTexture;
-        private SoundEffect bulletShotSound;
+        private static Texture2D bulletTexture;
+        private static SoundEffect bulletShotSound;
+        public EnemyShootingPlayerEffect()
+        {
+            bulletTexture = content.Load<Texture2D>("BulletPlaceholder.png");
+            bulletShotSound = content.Load<SoundEffect>("GunShot");
+        }
         public EnemyShootingPlayerEffect(Enemy enemy, Vector2 playerVelocity, bool playerCanJump)
         {
             this.enemy = enemy;
@@ -32,10 +37,6 @@ namespace NinjaBox.View.VisualEffects
             shootDurotation = 0;
             nextShootMark = 0;
             bullets = new List<EnemyBullet>(5);
-
-
-            bulletTexture = content.Load<Texture2D>("BulletPlaceholder.png");
-            bulletShotSound = content.Load<SoundEffect>("GunShot");
         }
 
         public bool IsEffectOver

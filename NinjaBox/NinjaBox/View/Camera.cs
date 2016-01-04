@@ -12,12 +12,15 @@ namespace NinjaBox.View
     {
         private float ScreenWidth;
         private float ScreenHeight;
+        private float currentPlatformHeight;
         private Vector2 cameraOffset;
         public Camera(GraphicsDevice device)
         {
             ScreenWidth = device.Viewport.Width;
             ScreenHeight = device.Viewport.Height;
             cameraOffset = new Vector2(0, 0);
+
+            currentPlatformHeight = 0;
             
         }
         public Vector2 CameraOffSet
@@ -67,15 +70,26 @@ namespace NinjaBox.View
             { 
                 cameraOffset.X = 0; 
             }
-
-            if (player.Position.Y <= 0.3f)
+            //if the player can jump, the player is standing on a platform and therefore I will save the playform'
+            //Y-led height to have it as the "base" of the game view.
+            if (player.Position.Y <= 0.4f)
             {
-                cameraOffset.Y = (player.Position.Y - 0.3f);
+                cameraOffset.Y = (player.Position.Y - 0.4f);
             }
-            else 
-            { 
-                cameraOffset.Y = 0; 
+            else
+            {
+                cameraOffset.Y = 0;
             }
+        }
+
+        /// <summary>
+        /// Takes a Vector2 as agrument and transforms it's values to model values
+        /// </summary>
+        /// <param name="pixelVector">Vector2 that is being transformed.</param>
+        /// <returns></returns>
+        public Vector2 getModelValue(Vector2 pixelVector)
+        {
+            return new Vector2(pixelVector.X / ScreenWidth, pixelVector.Y / ScreenHeight);
         }
     }
 }

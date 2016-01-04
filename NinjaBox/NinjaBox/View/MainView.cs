@@ -77,6 +77,10 @@ namespace NinjaBox.View
             backGroundTexture = content.Load<Texture2D>("GameBackground.png");
             backGroundWinTexture = content.Load<Texture2D>("WinBackgroundPlaceholder.png");
 
+            //this is never used but the constructor that takes 0 arguments loads in the contents for the effect
+            //thus it wont have to load each time a new effect is created.
+            EnemyShootingPlayerEffect loadEffectContent = new EnemyShootingPlayerEffect();
+
             EnemyDiesSound = content.Load<SoundEffect>("EnemyDies");
             playerFallSound = content.Load<SoundEffect>("WilhelmScream");
             backgroundMusic = content.Load<Song>("StealthGroover");

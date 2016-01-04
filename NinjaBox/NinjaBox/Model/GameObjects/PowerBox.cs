@@ -7,7 +7,7 @@ using System.Text;
 
 namespace NinjaBox.Model.GameObjects
 {
-    class PowerBox : IisDestroyable
+    class PowerBox : IDestroyable
     {
         private Vector2 position;
         private int connectionID;
@@ -33,7 +33,6 @@ namespace NinjaBox.Model.GameObjects
         {
             get { return connectionID; }
         }
-
         public bool IsActive
         {
             get { return isActive; }
@@ -52,7 +51,6 @@ namespace NinjaBox.Model.GameObjects
                     securityCameras[i].DisableCamera();
                 }
             }
-
             return securityCameras;
         }
     }

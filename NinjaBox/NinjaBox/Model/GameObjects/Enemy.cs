@@ -7,7 +7,7 @@ using System.Text;
 
 namespace NinjaBox.Model.GameObjects
 {
-    class Enemy : IisDestroyable
+    class Enemy : IDestroyable
     {
         //indicates the direction the enemy is facing
         private Direction faceDirection;

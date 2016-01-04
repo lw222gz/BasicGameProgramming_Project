@@ -14,7 +14,7 @@ namespace NinjaBox.Model.GameObjects
 
         public LevelExit(Platform platform)
         {
-            position = new Vector2(platform.EndXPosition - size.X /2, platform.StartPosition.Y - size.Y/2);
+            position = new Vector2(platform.EndXPosition - size.X /2, platform.Position.Y - size.Y/2);
         }
 
         public LevelExit(Vector2 position)

@@ -104,12 +104,12 @@ namespace NinjaBox.Model
                 modelYCordModifier = (levelDesign.GetLength(0) - 10);
             }
 
-            for (int i = 0; i < levelDesign.GetLength(0); i++)
+            for (int y = 0; y < levelDesign.GetLength(0); y++)
             {
                 
-                for (int j = 0; j < levelDesign.GetLength(1); j++)
+                for (int x = 0; x < levelDesign.GetLength(1); x++)
                 {
-                    switch(levelDesign[i, j])
+                    switch(levelDesign[y, x])
                     {
                         case '-':
                             //sets start values for a platform
@@ -121,15 +121,31 @@ namespace NinjaBox.Model
                                 //land on. And at some values no platfroms would be drawn when there should be. These values were CONSISTENT therefore it's probably something I just don't know yet about
                                 //transforming floats to intergers.
                                 //This private field is a workaround that problem.
-                                platformStart = j;
+                                platformStart = x;
 
-                                platformStartPoint = new Vector2(j / 10f, (i - modelYCordModifier) / 10f);
+                                platformStartPoint = new Vector2(x / 10f, (y - modelYCordModifier) / 10f);
                             }
                             //end of a platform
-                            if (j == levelDesign.GetLength(1) - 1 && levelDesign[i, j] == '-' || levelDesign[i, j + 1] != '-')
+                            if (x == levelDesign.GetLength(1) - 1 && levelDesign[y, x] == '-' || levelDesign[y, x + 1] != '-')
                             {
-                                platformXEndPoint = (j + 1) / 10f;
-                                levelPlatforms.Add(new Platform(platformStartPoint, platformXEndPoint, j - platformStart + 1)); //platformStart - j + 1
+                                platformXEndPoint = (x + 1) / 10f;
+                                if (x + 1 < levelDesign.GetLength(1) && levelDesign[y, x + 1] == '/')
+                                {
+                                    //Adds a moving platform in X-led
+                                    int counter = getPatrolXLength(levelDesign[y, x + 1], levelDesign, y, x);
+                                    levelPlatforms.Add(new Platform(platformStartPoint, platformXEndPoint, x - platformStart + 1, (x + counter) / 10f, Direction.Horizontal));                                    
+                                }
+                                else if (y + 1 < levelDesign.GetLength(0) && levelDesign[y + 1, x] == '%')
+                                {
+                                    //Adds a moving platform in Y-led
+                                    int counter = getPatrolYLength(levelDesign[y + 1, x], levelDesign, y, x);
+                                    levelPlatforms.Add(new Platform(platformStartPoint, platformXEndPoint, x - platformStart + 1, (y - modelYCordModifier + counter) / 10f, Direction.Vertical));
+                                }
+                                else
+                                {
+                                    //Adds a static platform
+                                    levelPlatforms.Add(new Platform(platformStartPoint, platformXEndPoint, x - platformStart + 1));
+                                }
                                 isBuildingPlatform = false;
                                 platformStart = 0;
                             }
@@ -140,7 +156,7 @@ namespace NinjaBox.Model
                         case '>':
                             
                             Direction enemyDirection;
-                            if (levelDesign[i, j] == '>')
+                            if (levelDesign[y, x] == '>')
                             {
                                 enemyDirection = Direction.Right;
                             }
@@ -148,27 +164,19 @@ namespace NinjaBox.Model
                             {
                                 enemyDirection = Direction.Left;
                             }
-                            if (j + 1 < levelDesign.GetLength(1))
-                            {
-                                if (levelDesign[i, j + 1] == '/' || levelDesign[i, j + 1] == '%')
-                                {
-                                    char patrolType = levelDesign[i, j + 1];
-                                    int counter = 1;
-                                    while (levelDesign[i, j + counter] == patrolType)
-                                    {
-                                        counter += 1;
-                                    }
+                            //checks so the enemy isent on the end on the level grid, if so it cant have a patrol path
+                            if (x + 1 < levelDesign.GetLength(1) && (levelDesign[y, x + 1] == '/' || levelDesign[y, x + 1] == '%'))
+                            {                               
+                                    char patrolType = levelDesign[y, x + 1];
 
-                                    enemies.Add(new Enemy(new Vector2(j / 10f, (i - modelYCordModifier) / 10f), enemyDirection, (j + counter) / 10f, patrolType == '/'));
-                                }
-                                else
-                                {
-                                    enemies.Add(new Enemy(new Vector2(j / 10f, (i - modelYCordModifier) / 10f), enemyDirection));
-                                }
+                                    int counter = getPatrolXLength(patrolType, levelDesign, y, x);     
+                                    //Adds a patroling enemy
+                                    enemies.Add(new Enemy(new Vector2(x / 10f, (y - modelYCordModifier) / 10f), enemyDirection, (x + counter) / 10f, patrolType == '/'));
                             }                                                        
                             else
                             {
-                                enemies.Add(new Enemy(new Vector2(j / 10f, (i - modelYCordModifier) / 10f), enemyDirection));
+                                //Adds a non-moving enemy
+                                enemies.Add(new Enemy(new Vector2(x / 10f, (y - modelYCordModifier) / 10f), enemyDirection));
                             }
                             
                             break;
@@ -179,7 +187,7 @@ namespace NinjaBox.Model
                             if (!levelHasExit)
                             {
                                 levelHasExit = true;
-                                levelExit = new LevelExit(new Vector2(j / 10f, (i - modelYCordModifier) / 10f));
+                                levelExit = new LevelExit(new Vector2(x / 10f, (y - modelYCordModifier) / 10f));
                             }
                             else
                             {
@@ -191,7 +199,7 @@ namespace NinjaBox.Model
                         case '"':
                         case '#':
                         case '¤':
-                            levelCameras.Add(new SecurityCamera(new Vector2(j / 10f, (i - modelYCordModifier) / 10f), getCameraLinkId(levelDesign[i, j])));
+                            levelCameras.Add(new SecurityCamera(new Vector2(x / 10f, (y - modelYCordModifier) / 10f), getCameraLinkId(levelDesign[y, x])));
                                 //add detection camera
 
                             break;
@@ -200,15 +208,66 @@ namespace NinjaBox.Model
                         case '£':
                         case '$':
                                 //add camera power box
-                            levelPowerBoxes.Add(new PowerBox(new Vector2(j / 10f, (i - modelYCordModifier) / 10f), getCameraLinkId(levelDesign[i, j])));
+                            levelPowerBoxes.Add(new PowerBox(new Vector2(x / 10f, (y - modelYCordModifier) / 10f), getCameraLinkId(levelDesign[y, x])));
                             break;
 
                         case '+':
-                            playerStartPosition = new Vector2(j/10f + player.Size.X /2, (i - modelYCordModifier)/10f + player.Size.Y/2);
+                            playerStartPosition = new Vector2(x/10f + player.Size.X /2, (y - modelYCordModifier)/10f + player.Size.Y/2);
                             break;
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Reads the patrol length of a moving object
+        /// and returns that Y-led length as an int (1 = 0.1 model cords)
+        /// </summary>
+        /// <param name="patrolType">type of patrol char that the loop will look for</param>
+        /// <param name="levelDesign">the 2d level matrix</param>
+        /// <param name="y">y counter for the multidimensional array</param>
+        /// <param name="x">x counter for the multidimensional array</param>
+        /// <returns>int representing length of the patrol</returns>
+        /// TODO: Try to fuse this method with getPatrolXLength somehow?
+        private int getPatrolYLength(char patrolType, char[,] levelDesign, int y, int x)
+        {
+            int counter = 1;
+            while (levelDesign[y + counter, x] == patrolType)
+            {
+                counter += 1;
+
+                //if the next char read is not within the array I need to stop the loop to avoid a crash
+                if (y + 1 + counter > levelDesign.GetLength(0))
+                {
+                    break;
+                }
+            }
+
+            return counter;
+        }
+
+        /// <summary>
+        /// Reads the patrol length of a moving object
+        /// and returns that X-led length as an int (1 = 0.1 model cords)
+        /// </summary>
+        /// <param name="patrolType">Char to see if it exists</param>
+        /// <param name="levelDesign">the level 2d matrix</param>
+        /// <param name="y">y counter for the multidimensional array</param>
+        /// <param name="x">x counter for the multidimensional array</param>
+        private int getPatrolXLength(char patrolType, char [,] levelDesign, int y, int x)
+        {
+            int counter = 1;
+            while (levelDesign[y, x + counter] == patrolType)
+            {
+                counter += 1;
+
+                //if the next char read is not within the array I need to stop the loop to avoid a crash
+                if (x + 1 + counter > levelDesign.GetLength(1))
+                {
+                    break;
+                }
+            }
+            return counter;
         }
 
         private int getCameraLinkId(char p)
@@ -244,6 +303,7 @@ namespace NinjaBox.Model
             //NOTE: each case has to initiate the levelMessages List, I dont want empty lists on each level just hanging around.
             switch (levelIdentifier)
             {
+                //level messages for the tutorial
                 case 0:
                     levelMessages = new List<Message>(11);
 
@@ -258,7 +318,7 @@ namespace NinjaBox.Model
                     levelMessages.Add(new Message("you will allways attack in the direction you last moved.", new Vector2(2.6f, .15f)));
 
                     levelMessages.Add(new Message("Be careful not too get too close to their backs.", new Vector2(2f, -.25f)));
-                    levelMessages.Add(new Message("Getting too close will cause them to sense you", new Vector2(2.0f, -.20f)));
+                    levelMessages.Add(new Message("Getting too close will cause them to sense you", new Vector2(2.0f, -.2f)));
                     levelMessages.Add(new Message("and turn around.", new Vector2(2, -.15f)));
 
                     levelMessages.Add(new Message("Tutorial complete! Remember that you can allways ", new Vector2(3.2f, -.3f)));
@@ -266,10 +326,14 @@ namespace NinjaBox.Model
                     break;
 
                
+                    //level message for level 2
                 case 2:
-                    levelMessages = new List<Message>(2);
+                    levelMessages = new List<Message>(5);
 
-                    levelMessages.Add(new Message("The following area is in construction", new Vector2(2.5f, -.3f)));
+                    levelMessages.Add(new Message("This security camera is unpassabled", new Vector2(3f, -.55f)));
+                    levelMessages.Add(new Message("and undestructable, you need to find", new Vector2(3f, -.5f)));
+                    levelMessages.Add(new Message("it's power source and destroy it to be", new Vector2(3f, -.45f)));
+                    levelMessages.Add(new Message("able to pass.", new Vector2(3f, -.4f)));
                     break;
             }
         }

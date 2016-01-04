@@ -75,7 +75,7 @@
     <Compile Include="Model\GameObjects\DirectionEnum.cs" />
     <Compile Include="Model\GameObjects\LevelExit.cs" />
     <Compile Include="Model\GameObjects\Message.cs" />
-    <Compile Include="Model\GameObjects\ObjectDefiningInterfaces\IisDestroyable.cs" />
+    <Compile Include="Model\GameObjects\ObjectDefiningInterfaces\IDestroyable.cs" />
     <Compile Include="Model\GameObjects\Platform.cs" />
     <Compile Include="Model\GameObjects\Player.cs" />
     <Compile Include="Model\GameObjects\SecurityCamera.cs" />
@@ -144,6 +144,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\DestroyedPowerBoxPlaceholder.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\PlatformImages\MovingPlatformBarHorizontal.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\PlatformImages\MovingPlatformBarVertical.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\SecurityCameraPowerBoxPlaceholder.png">

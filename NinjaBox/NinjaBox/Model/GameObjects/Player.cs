@@ -226,5 +226,16 @@ namespace NinjaBox.Model.GameObjects
             isAlive = true;
             hasFinishedGame = false;
         }
+
+        /// <summary>
+        /// if the player stands on a platform that moves in X-Led then the players position
+        /// is updated with the speed of the platform
+        /// </summary>
+        /// <param name="speed">Speed of the platform</param>
+        /// <param name="elapsedTime">elapsed gametime since last update</param>
+        public void standingOnMovingPlatform(Vector2 speed, float elapsedTime)
+        {
+            position += speed * elapsedTime;            
+        }
     }
 }

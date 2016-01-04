@@ -53,6 +53,10 @@ namespace NinjaBox.Controller
             {
                 e.Update(ElapsedTime);
             }
+            foreach (Platform p in activeLevel.Levelplatforms)
+            {
+                p.Update(ElapsedTime);
+            }
 
             //-- Platform collision and checks if a player is on a platform, if so the player can jump
             //TODO: refactor this functionality, I feel like there is alot of ways this can be done better but for now Ill leave it like this.
@@ -62,6 +66,11 @@ namespace NinjaBox.Controller
                 if (gameCollisions.CheckPlatformCollision(p))
                 {
                     PlayerIsOnPlatfrom = true;
+                    if (p.IsMoving && p.MovingDirection == Direction.Horizontal)
+                    {
+                        //if the platform is moving the player moves with the platform
+                        activeLevel.Player.standingOnMovingPlatform(p.Speed, ElapsedTime);
+                    }
                 }
             }
             if (!PlayerIsOnPlatfrom)
@@ -75,6 +84,7 @@ namespace NinjaBox.Controller
             //-- 
 
             //Statements only checked if the player is alive.
+            //contains things as attack collision or enemy collision.
             if (activeLevel.Player.IsAlive)
             {
                 //Checks all enemy collison, attacking, gets detected or if the player gets too close
@@ -112,10 +122,6 @@ namespace NinjaBox.Controller
 
                 for (int i = 0; i < activeLevel.LevelPowerBoxes.Count; i++)
                 {
-                    if (activeLevel.Player.PlayerIsAttacking)
-                    {
-                        int a = 5;
-                    }
                     if (activeLevel.Player.PlayerIsAttacking && 
                         gameCollisions.CheckPlayerAttackArea(activeLevel.LevelPowerBoxes[i]))
                     {

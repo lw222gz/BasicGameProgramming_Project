@@ -93,17 +93,17 @@ namespace NinjaBox.Model
 
 
 
-        //checks the collision for platforms
+        //checks the collision for platforms 
         public bool CheckPlatformCollision(Platform platform)
         {
-            if (position.Y + size.Y/2 >= platform.StartPosition.Y &&
-                position.Y <= platform.StartPosition.Y &&
-                position.X >= platform.StartPosition.X &&
-                position.X <= platform.EndXPosition &&
+            if (position.Y + size.Y/2 >= platform.Position.Y - platform.PlatformViewSize.Y / 2 &&
+                position.Y + size.Y / 2 <= platform.Position.Y &&
+                position.X + size.X/3 >= platform.Position.X - platform.PlatformWidth/2 &&
+                position.X - size.X/3<= platform.Position.X + platform.PlatformWidth / 2 &&
                 velocity.Y >= 0)
             {
                 //When the player lands on a platform the jump is re-enabled
-                position.Y = platform.StartPosition.Y - size.Y / 2;
+                position.Y = platform.Position.Y - size.Y / 2 - platform.PlatformViewSize.Y /2;
                 return true;
             }
             return false;
@@ -114,7 +114,7 @@ namespace NinjaBox.Model
         /// </summary>
         /// <param name="obj">enemy that is checked if hit</param>
         /// <returns></returns>
-        public bool CheckPlayerAttackArea(IisDestroyable obj)
+        public bool CheckPlayerAttackArea(IDestroyable obj)
         {
             float attackXMax; 
             float attackXMin; 

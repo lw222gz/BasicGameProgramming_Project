@@ -9,7 +9,7 @@ namespace NinjaBox.Model.GameObjects.ObjectDefinedInterfaces
     /// <summary>
     /// Interface that is inherited by all destroyable game objects
     /// </summary>
-    interface IisDestroyable
+    interface IDestroyable
     {
         Vector2 Position { get; }
         Vector2 Size { get; }

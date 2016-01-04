@@ -8,6 +8,9 @@ namespace NinjaBox.Model.GameObjects
     public enum Direction
     {
         Left,
-        Right
+        Right,
+        Horizontal,
+        Vertical,
+        None
     }   
 }
