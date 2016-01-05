@@ -31,7 +31,7 @@ namespace NinjaBox.Model
         {
             this.player = player;
             playerStartPosition = new Vector2(0.1f, 0.85f);
-            levelPlatforms = new List<Platform>(10);
+            levelPlatforms = new List<Platform>(30);
             enemies = new List<Enemy>(10);
             //7 is the max amount of cameras for a level with the current build.
             levelCameras = new List<SecurityCamera>(7);
@@ -199,16 +199,16 @@ namespace NinjaBox.Model
                         case '"':
                         case '#':
                         case '¤':
+                            //add detection camera
                             levelCameras.Add(new SecurityCamera(new Vector2(x / 10f, (y - modelYCordModifier) / 10f), getCameraLinkId(levelDesign[y, x])));
-                                //add detection camera
-
                             break;
 
                         case '@':
                         case '£':
                         case '$':
-                                //add camera power box
+                            //add camera power box
                             levelPowerBoxes.Add(new PowerBox(new Vector2(x / 10f, (y - modelYCordModifier) / 10f), getCameraLinkId(levelDesign[y, x])));
+                            
                             break;
 
                         case '+':

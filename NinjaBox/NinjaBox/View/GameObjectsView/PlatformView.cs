@@ -128,7 +128,7 @@ namespace NinjaBox.View.GameObjectsView
                 YCoordValue = p.StartPatrolPoint + p.PlatformViewSize.Y / 2;
                 XAdd = 0;
                 YAdd = camera.getModelValue(new Vector2(movingPlatformBarVerticalTexture.Bounds.Width, movingPlatformBarVerticalTexture.Bounds.Height)).Y;
-                amountOfBars = (int)((p.EndPatrolPoint - p.StartPatrolPoint) * 10) - 1;
+                amountOfBars = (int)Math.Round((p.EndPatrolPoint - p.StartPatrolPoint) * 10f) - 1;
                 activeBarTexture = movingPlatformBarVerticalTexture;
                 imageOrigin = new Vector2(movingPlatformBarVerticalTexture.Bounds.Width / 2, 0);
             }
