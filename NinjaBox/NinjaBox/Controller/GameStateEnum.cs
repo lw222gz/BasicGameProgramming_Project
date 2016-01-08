@@ -12,6 +12,7 @@ namespace NinjaBox.Controller
         MainMenu,
         Restart,
         CreditsDisplay,
+        LevelSelect,
         Tutorial
     }
 }

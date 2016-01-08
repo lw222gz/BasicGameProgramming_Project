@@ -49,8 +49,6 @@ namespace NinjaBox
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
@@ -73,9 +71,7 @@ namespace NinjaBox
         /// game-specific content.
         /// </summary>
         protected override void UnloadContent()
-        {
-            // TODO: Unload any non ContentManager content here
-        }
+        {   }
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -84,14 +80,13 @@ namespace NinjaBox
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            //TODO:Menu - have a enum GameState and defines the state of the game, paused, start menu, game over manu etc.
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) { 
                 Exit();
             }
             switch (gameState)
             {
                 case GameState.Restart:
-                        if (imgui.doButton(ButtonType.Restart) || Keyboard.GetState().IsKeyDown(Keys.R))
+                    if (imgui.doButton(ButtonType.Restart, new Vector2(0.2f, 0.2f), null) || Keyboard.GetState().IsKeyDown(Keys.R))
                         {
                             gameController.RestartLevel();
                             gameState = GameState.Running;
@@ -99,19 +94,23 @@ namespace NinjaBox
                     break;
 
                 case GameState.MainMenu:
-                    if (imgui.doButton(ButtonType.Play))
+                    if (imgui.doButton(ButtonType.Play, new Vector2(0.8f, 0.2f), null))
                     {
-                        gameController.SetFirstGameLevel();
+                        gameController.SetGameLevel(1);
                         gameState = GameState.Running;
                     }
-                    if (imgui.doButton(ButtonType.PlayTutorial))
+                    if (imgui.doButton(ButtonType.PlayTutorial, new Vector2(0.8f, 0.5f), null))
                     {
-                        gameController.SetTutorialLevel();
+                        gameController.SetGameLevel(0);
                         gameState = GameState.Running;
                     }
-                    if (imgui.doButton(ButtonType.Credits))
+                    if (imgui.doButton(ButtonType.Credits, new Vector2(0.8f, 0.8f), null))
                     {
                         gameState = GameState.CreditsDisplay;
+                    }
+                    if (imgui.doButton(ButtonType.LevelSelect, new Vector2(0.5f, 0.2f), null))
+                    {
+                        gameState = GameState.LevelSelect;
                     }
                     break;
 
@@ -150,23 +149,47 @@ namespace NinjaBox
 
 
                 case GameState.Pause:
-                    if (imgui.doButton(ButtonType.Resume))
+                    if (imgui.doButton(ButtonType.Resume, new Vector2(0.8f, 0.5f), null))
                     {
                         gameState = GameState.Running;
                     }
-                    if (imgui.doButton(ButtonType.MainMenu))
+                    if (imgui.doButton(ButtonType.MainMenu, new Vector2(0.8f, 0.2f), null))
                     {
                         gameState = GameState.MainMenu;
-                        gameController.SetFirstGameLevel();
+                        gameController.SetGameLevel(1);
                     }
                     break;
 
 
 
                 case GameState.CreditsDisplay:
-                    if (imgui.doButton(ButtonType.MainMenu))
+                    if (imgui.doButton(ButtonType.MainMenu, new Vector2(0.8f, 0.2f), null))
                     {
                         gameState = GameState.MainMenu;
+                    }
+                    break;
+
+
+                case GameState.LevelSelect:
+                    float yPos = 0.2f;
+
+                    if (imgui.doButton(ButtonType.MainMenu, new Vector2(0.8f, 0.2f), null))
+                    {
+                        gameState = GameState.MainMenu;
+                    }
+
+                    //starts the current level
+                    if (imgui.doButton(ButtonType.Play, new Vector2(0.8f, 0.5f), null))
+                    {
+                        gameState = GameState.Running;
+                    }
+
+                    for (int i = 1; i <= gameLevels.getAmountOfLevels; i++)
+                    {
+                        if (imgui.doButton(ButtonType.NumberButton, new Vector2(0.2f, yPos * i), i.ToString()))
+                        {
+                            gameController.SetGameLevel(i);
+                        }
                     }
                     break;
             }

@@ -99,7 +99,7 @@ namespace NinjaBox.Model
             if (position.Y + size.Y/2 >= platform.Position.Y - platform.PlatformViewSize.Y / 2 &&
                 position.Y + size.Y / 2 <= platform.Position.Y &&
                 position.X + size.X/3 >= platform.Position.X - platform.PlatformWidth/2 &&
-                position.X - size.X/3<= platform.Position.X + platform.PlatformWidth / 2 &&
+                position.X - size.X/3 <= platform.Position.X + platform.PlatformWidth / 2 &&
                 velocity.Y >= 0)
             {
                 //When the player lands on a platform the jump is re-enabled

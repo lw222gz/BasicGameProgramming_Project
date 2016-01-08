@@ -19,17 +19,18 @@ namespace NinjaBox.View
         protected static Camera camera;
         protected static SpriteBatch spriteBatch;
         protected static ContentManager content;
+        //message view is protected to allow other draw classes to write out messages
+        protected static MessagesView messageView;
 
         private Song backgroundMusic;
         private SoundEffect EnemyDiesSound;
         private SoundEffect playerFallSound;
 
-        //View classes for game objects
+        //View classes for game objects       
         private PlatformView platformView;
         private EnemyView enemyView;
         private PlayerView playerView;
-        private LevelExitView levelExitView;
-        private MessagesView messageView;
+        private LevelExitView levelExitView;        
         private PowerBoxView powerBoxView;
         private SecurityCameraView securityCameraView;
         private IMGUI imgui;
@@ -79,7 +80,9 @@ namespace NinjaBox.View
 
             //this is never used but the constructor that takes 0 arguments loads in the contents for the effect
             //thus it wont have to load each time a new effect is created.
-            EnemyShootingPlayerEffect loadEffectContent = new EnemyShootingPlayerEffect();
+            EnemyShootingPlayerEffect loadShootingEffectContent = new EnemyShootingPlayerEffect();
+            EnemyExplodesEffect loadEnemyExplodeEffect = new EnemyExplodesEffect();
+
 
             EnemyDiesSound = content.Load<SoundEffect>("EnemyDies");
             playerFallSound = content.Load<SoundEffect>("WilhelmScream");
@@ -160,9 +163,10 @@ namespace NinjaBox.View
         }
 
         //TODO -Add visual effect: small explosion
-        public void EnemyDead()
+        public void EnemyDead(Vector2 position)
         {
             EnemyDiesSound.Play();
+            visualEffects.Add(new EnemyExplodesEffect(position));
         }
 
         /// <summary>

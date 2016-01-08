@@ -55,3 +55,9 @@
 /processorParam:Quality=Best
 /build:WilhelmScream.wav
 
+#begin NumberButtonFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:NumberButtonFont.spritefont
+

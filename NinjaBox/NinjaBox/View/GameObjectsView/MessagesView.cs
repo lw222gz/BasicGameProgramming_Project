@@ -12,20 +12,21 @@ namespace NinjaBox.View.GameObjectsView
     {
         private SpriteFont gameFont;
         private SpriteFont creditFont;
+        private SpriteFont numberButtonFont;
 
+        /// <summary>
+        /// loads in all used fonts
+        /// </summary>
         public MessagesView() {
             gameFont = content.Load<SpriteFont>("NewSpriteFont");
             creditFont = content.Load<SpriteFont>("creditFont");
-            
+            numberButtonFont = content.Load<SpriteFont>("NumberButtonFont");            
         }
 
 
         public void DrawMessages(List<Message> levelMessages){
-            Vector2 FontOrigin;
 
             foreach(Message m in levelMessages){
-                FontOrigin = gameFont.MeasureString(m.getMessage) / 2;
-
                 spriteBatch.DrawString(gameFont, 
                     m.getMessage, 
                     camera.getVisualCords(m.Position), 
@@ -36,6 +37,26 @@ namespace NinjaBox.View.GameObjectsView
                     SpriteEffects.None, 
                     0.5f);
             }
+        }
+
+        /// <summary>
+        /// Draws a quick message with the given parameters
+        /// </summary>
+        /// <param name="message">string message to draw</param>
+        /// <param name="position">position for the string message</param>
+        public void DrawQuickMessage(string message, Vector2 position)
+        {
+            Vector2 FontOrigin = numberButtonFont.MeasureString(message) / 2;
+
+            spriteBatch.DrawString(numberButtonFont,
+                message, 
+                position, 
+                Color.Black, 
+                0,
+                FontOrigin, 
+                1,
+                SpriteEffects.None, 
+                0.5f);
         }
 
         /// <summary>

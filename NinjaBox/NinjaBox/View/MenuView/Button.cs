@@ -10,32 +10,35 @@ namespace NinjaBox.View.MenuView
 {
     class Button
     {
-        private Vector2 position;
         private Texture2D buttonImage;
         private Texture2D hoverButtonImage;
+        private string message;
         private float buttonWidth;
         private float buttonHeight;
+
         //button with no hover effect
-        public Button(Vector2 position, Texture2D buttonImage) : this(position, buttonImage, buttonImage)
+        public Button(Texture2D buttonImage) : this(buttonImage, buttonImage, null)
+        { }
+        //button with hover effect
+        public Button(Texture2D buttonImage, Texture2D hoverButtonImage) : this(buttonImage, hoverButtonImage, null) 
         { }
 
         //button with hover effect
-        public Button(Vector2 position, Texture2D buttonImage, Texture2D hoverButtonImage)
+        public Button(Texture2D buttonImage, Texture2D hoverButtonImage, string message)
         {
-            this.position = position;
+            this.message = message;
             this.buttonImage = buttonImage;   
             this.hoverButtonImage = hoverButtonImage;
-            this.buttonWidth = buttonImage.Bounds.Width;
-            this.buttonHeight = buttonImage.Bounds.Height;
-            OldMouseState = ButtonState.Released;
+            //OldMouseState = ButtonState.Released;
             ActiveTexture = buttonImage;
             IsMouseOver = false;
             IsButtonClicked = false;
         }
 
-        public Vector2 Position
+        
+        public string Message
         {
-            get { return position; }
+            get { return message; }
         }
         public Texture2D ButtonImage
         {
@@ -47,12 +50,17 @@ namespace NinjaBox.View.MenuView
         }
         public float ButtonWidth
         {
-            get { return buttonWidth; }
+            get { return ActiveTexture.Bounds.Width; }
         }
         public float ButtonHeigth
         {
-            get { return buttonHeight; }
-        }      
+            get { return ActiveTexture.Bounds.Height; }
+        }
+        public Vector2 Position
+        {
+            get;
+            set;
+        }
 
         public Texture2D ActiveTexture
         {

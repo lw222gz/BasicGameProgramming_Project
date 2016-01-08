@@ -22,6 +22,13 @@ namespace NinjaBox.View
         private Button MainMenuButton;
         private Button ResumeButton;
         private Button CreditsButton;
+        private Button LevelSelectButton;
+
+        private Texture2D NumberButtonNormalTexture;
+        private Texture2D NumberButtonHoverTexture;
+
+        private ButtonState currentButtonState;
+        private ButtonState oldButtonState;
 
         private SoundEffect buttonClickSound;
 
@@ -30,6 +37,8 @@ namespace NinjaBox.View
 
         public IMGUI()
         {
+            currentButtonState = ButtonState.Released;
+            oldButtonState = ButtonState.Released;
             activeButtons = new List<Button>(3);
             //gameMenu = new GameMenu(content);
             //currentMenu = ButtonType.None;               
@@ -46,77 +55,91 @@ namespace NinjaBox.View
         public void LoadResources()
         {
             //restart menu
-            RestartButton = new Button(new Vector2(0.2f, 0.2f),
-                                        content.Load<Texture2D>("ButtonImages/RestartButtonNormal.png"),
+            RestartButton = new Button(content.Load<Texture2D>("ButtonImages/RestartButtonNormal.png"),
                                         content.Load<Texture2D>("ButtonImages/RestartButtonHover.png"));
 
             //main menu
-            PlayGameButton = new Button(new Vector2(0.8f, 0.2f),
-                                        content.Load<Texture2D>("ButtonImages/PlayGameNormalButton.png"),
+            PlayGameButton = new Button(content.Load<Texture2D>("ButtonImages/PlayGameNormalButton.png"),
                                         content.Load<Texture2D>("ButtonImages/PlayGameHoverButton.png"));
 
-            PlayTutorialButton = new Button(new Vector2(0.8f, 0.5f),
-                                            content.Load<Texture2D>("ButtonImages/PlayTutorialNormalButton.png"),
+            PlayTutorialButton = new Button(content.Load<Texture2D>("ButtonImages/PlayTutorialNormalButton.png"),
                                             content.Load<Texture2D>("ButtonImages/PlayTutorialHoverButton.png"));
 
-            CreditsButton = new Button(new Vector2(0.8f, 0.8f),
-                                        content.Load<Texture2D>("ButtonImages/CreditButtonNormal"),
+            CreditsButton = new Button(content.Load<Texture2D>("ButtonImages/CreditButtonNormal"),
                                         content.Load<Texture2D>("ButtonImages/CreditButtonHover"));
+
+            LevelSelectButton = new Button(content.Load<Texture2D>("ButtonImages/LevelSelectButtonNormal.png"),
+                                            content.Load<Texture2D>("ButtonImages/LevelSelectButtonHover.png"));
+
+            NumberButtonNormalTexture = content.Load<Texture2D>("ButtonImages/NumberButtonNormal.png");
+            NumberButtonHoverTexture = content.Load<Texture2D>("ButtonImages/NumberButtonHover.png");
 
 
             //pause menu
-            MainMenuButton = new Button(new Vector2(0.8f, 0.2f),
-                                    content.Load<Texture2D>("ButtonImages/MainMenuButtonNormal.png"),
-                                    content.Load<Texture2D>("ButtonImages/MainMenuButtonHover.png"));
+            MainMenuButton = new Button(content.Load<Texture2D>("ButtonImages/MainMenuButtonNormal.png"),
+                                        content.Load<Texture2D>("ButtonImages/MainMenuButtonHover.png"));
 
-            ResumeButton = new Button(new Vector2(0.8f, 0.5f),
-                                    content.Load<Texture2D>("ButtonImages/ResumeButtonNormal.png"),
-                                    content.Load<Texture2D>("ButtonImages/ResumeButtonHover.png"));
+            ResumeButton = new Button(content.Load<Texture2D>("ButtonImages/ResumeButtonNormal.png"),
+                                        content.Load<Texture2D>("ButtonImages/ResumeButtonHover.png"));
+
+            
+
 
             buttonClickSound = content.Load<SoundEffect>("MenuClick");
 
 
         }
 
-        public bool doButton(ButtonType buttonType)
+        public bool doButton(ButtonType buttonType, Vector2 position, string mess)
         {
             MouseState mouseState = Mouse.GetState();
 
-            button = getButtonValue(buttonType);
+            if (buttonType != ButtonType.NumberButton)
+            {
+                button = getButtonValue(buttonType);
+            }
+            else
+            {
+                //number buttons are repetetive so I need to be abel to create multiple objects
+                button = new Button(NumberButtonNormalTexture, NumberButtonHoverTexture, mess.ToString());
+            }
 
-            Vector2 buttonVisualCords = camera.getVisualCords(button.Position + camera.CameraOffSet);
+            button.Position = camera.getVisualCords(position + camera.CameraOffSet);
 
             button.IsMouseOver = false;
             button.IsButtonClicked = false;
-            if (mouseState.X >= buttonVisualCords.X - button.ButtonWidth / 2 &&
-                mouseState.X <= buttonVisualCords.X + button.ButtonWidth / 2 &&
-                mouseState.Y >= buttonVisualCords.Y - button.ButtonHeigth / 2 &&
-                mouseState.Y <= buttonVisualCords.Y + button.ButtonHeigth / 2)
+            if (mouseState.X >= button.Position.X - button.ButtonWidth / 2 &&
+                mouseState.X <= button.Position.X + button.ButtonWidth / 2 &&
+                mouseState.Y >= button.Position.Y - button.ButtonHeigth / 2 &&
+                mouseState.Y <= button.Position.Y + button.ButtonHeigth / 2)
             {
                 button.ActiveTexture = button.HoverButtonImage;
                 button.IsMouseOver = true;
 
-                if (mouseState.LeftButton == ButtonState.Pressed)
-                {
-                    button.OldMouseState = ButtonState.Pressed;
-                }
-                if (mouseState.LeftButton == ButtonState.Released && button.OldMouseState == ButtonState.Pressed)
+                if (mouseState.LeftButton == ButtonState.Pressed && oldButtonState == ButtonState.Released)
                 {
                     button.IsButtonClicked = true;
-                    button.OldMouseState = ButtonState.Released;
+                    oldButtonState = ButtonState.Pressed;
                     //Button click sound effect
                     buttonClickSound.Play();
                 }
+                if (mouseState.LeftButton == ButtonState.Released && oldButtonState == ButtonState.Pressed)
+                {
+                    oldButtonState = ButtonState.Released;
+                }                
             }
             else
             {
                 button.ActiveTexture = button.ButtonImage;
                 //resets the old mouse state if the mouse isent over the button
-                button.OldMouseState = ButtonState.Released;
+                //oldButtonState = ButtonState.Released;
             }
 
-
-            setButtonValue(buttonType);
+            if (buttonType != ButtonType.NumberButton)
+            {
+                setButtonValue(buttonType);
+            }
+            
 
             activeButtons.Add(button);
 
@@ -149,6 +172,9 @@ namespace NinjaBox.View
 
                 case ButtonType.Credits:
                     return CreditsButton;
+
+                case ButtonType.LevelSelect:
+                    return LevelSelectButton;
 
                 default: 
                     return button;
@@ -189,6 +215,10 @@ namespace NinjaBox.View
                 case ButtonType.Credits:
                     CreditsButton = button;
                     break;
+
+                case ButtonType.LevelSelect:
+                    LevelSelectButton = button;
+                    break;
             }
         }
 
@@ -201,7 +231,7 @@ namespace NinjaBox.View
             foreach (Button b in activeButtons)
             {
                 spriteBatch.Draw(b.ActiveTexture,
-                                camera.getVisualCords(b.Position + camera.CameraOffSet),
+                                b.Position,
                                 null,
                                 Color.White,
                                 0f,
@@ -209,6 +239,11 @@ namespace NinjaBox.View
                                 1f,
                                 SpriteEffects.None,
                                 0);
+                if (b.Message != null)
+                {
+                    //have to use .ToString on the message since it's a nullable
+                    messageView.DrawQuickMessage(b.Message, b.Position);
+                }
             }
 
             //clears the list as it will be refilled with buttons in the next update

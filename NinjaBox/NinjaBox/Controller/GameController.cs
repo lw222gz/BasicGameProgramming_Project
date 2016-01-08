@@ -59,7 +59,6 @@ namespace NinjaBox.Controller
             }
 
             //-- Platform collision and checks if a player is on a platform, if so the player can jump
-            //TODO: refactor this functionality, I feel like there is alot of ways this can be done better but for now Ill leave it like this.
             PlayerIsOnPlatfrom = false;
             foreach (Platform p in activeLevel.Levelplatforms)
             {
@@ -106,9 +105,11 @@ namespace NinjaBox.Controller
                     //checks if the player has hit an enemy
                     if (activeLevel.Player.PlayerIsAttacking && gameCollisions.CheckPlayerAttackArea(activeLevel.Enemies[i]))
                     {
+                        //effect when enemy dies      
+                        mainView.EnemyDead(activeLevel.Enemies[i].Position);
+                        //removes the enemy obj
                         activeLevel.RemoveEnemy(activeLevel.Enemies[i]);
-                        //effect when enemy dies
-                        mainView.EnemyDead();
+                                          
                     } 
                 }
 
@@ -178,16 +179,9 @@ namespace NinjaBox.Controller
             activeLevel.Player.PlayerAttack();
         }
 
-
-        public void SetTutorialLevel()
+        internal void SetGameLevel(int index)
         {
-            CurrentLevel = 0;
-            setCurrentGameLevel();
-        }
-
-        public void SetFirstGameLevel()
-        {
-            CurrentLevel = 1;
+            CurrentLevel = index;
             setCurrentGameLevel();
             activeLevel.Player.Reset();
         }

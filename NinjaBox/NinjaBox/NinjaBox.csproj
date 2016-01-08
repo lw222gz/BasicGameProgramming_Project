@@ -86,6 +86,7 @@
     <Compile Include="View\Camera.cs" />
     <Compile Include="View\GameObjectsView\PowerBoxView.cs" />
     <Compile Include="View\GameObjectsView\SecurityCameraView.cs" />
+    <Compile Include="View\VisualEffects\EnemyExplodesEffect.cs" />
     <Compile Include="View\VisualEffects\VisualEffectsObjects\EnemyBullet.cs" />
     <Compile Include="View\GameObjectsView\EnemyView.cs" />
     <Compile Include="View\GameObjectsView\LevelExitView.cs" />
@@ -116,6 +117,12 @@
     <Content Include="Content\ButtonImages\CreditButtonNormal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\ButtonImages\LevelSelectButtonHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ButtonImages\LevelSelectButtonNormal.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\ButtonImages\MainMenuButtonHover.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -144,6 +151,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\DestroyedPowerBoxPlaceholder.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ButtonImages\NumberButtonHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ButtonImages\NumberButtonNormal.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\explosion.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\PlatformImages\MovingPlatformBarHorizontal.png">

@@ -228,7 +228,6 @@ namespace NinjaBox.Model
         /// <param name="y">y counter for the multidimensional array</param>
         /// <param name="x">x counter for the multidimensional array</param>
         /// <returns>int representing length of the patrol</returns>
-        /// TODO: Try to fuse this method with getPatrolXLength somehow?
         private int getPatrolYLength(char patrolType, char[,] levelDesign, int y, int x)
         {
             int counter = 1;

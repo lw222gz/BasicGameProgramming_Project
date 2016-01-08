@@ -73,24 +73,6 @@ namespace NinjaBox.View.GameObjectsView
         /// <param name="elapsedTime"></param>
         public bool Update(float elapsedTime)
         {
-            /*if (currentPosition.X <= direction.X)
-            {
-                currentPosition.X += direction.X * elapsedTime * bulletSpeed;
-            }
-            else
-            {
-                currentPosition.X -= direction.X * elapsedTime * bulletSpeed;
-            }
-
-            if (currentPosition.Y <= direction.Y)
-            {
-                currentPosition.Y -= (direction.Y * elapsedTime * bulletSpeed);
-            }
-            else
-            {
-                currentPosition.Y += (direction.Y * elapsedTime * bulletSpeed);
-            }*/
-
             bulletTimer += elapsedTime;
             float lifePrecent = bulletTimer / bulletLifeTime;
 

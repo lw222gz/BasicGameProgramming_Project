@@ -13,6 +13,8 @@ namespace NinjaBox.View.MenuView
         Resume,
         MainMenu,
         Credits,
+        LevelSelect,
+        NumberButton,
         None
     }
 }
