@@ -11,31 +11,24 @@ namespace NinjaBox.View.GameObjectsView
 {
     class EnemyView : MainView
     {
-        private float shotTimer;
-        private const float bulletShootInterval = 0.05f;
-        private float nextShotMark;
-        private List<EnemyBullet> bullets;
-
         private Texture2D enemyTexture;
         private Texture2D detectionTexture;
         private Texture2D bulletTexture;
-        private Vector2 enemyScale;
-        
+
         private SpriteEffects spriteEffect;
 
         public EnemyView()
         {
-            nextShotMark = 0;
-            shotTimer = 0;
-            bullets = new List<EnemyBullet>(5);
             enemyTexture = content.Load<Texture2D>("Enemy.png");
             detectionTexture = content.Load<Texture2D>("EnemyDetectionArea.png");
             bulletTexture = content.Load<Texture2D>("BulletPlaceholder.png");
         }
 
+        /// <summary>
+        /// Draws an enemy obj
+        /// </summary>
+        /// <param name="e">enemy obj that is drawn</param>
         public void DrawEnemies(Enemy e){                   
-                enemyScale = camera.GetScale(e.Size, enemyTexture);
-
                 //default direction for the image
                 if (e.EnemyFaceDirection == Direction.Left)
                 {
@@ -64,7 +57,7 @@ namespace NinjaBox.View.GameObjectsView
                                 Color.White,
                                 0f,
                                 new Vector2(enemyTexture.Bounds.Width / 2, enemyTexture.Bounds.Height / 2),
-                                enemyScale,
+                                1f,
                                 spriteEffect,
                                 0);
         }

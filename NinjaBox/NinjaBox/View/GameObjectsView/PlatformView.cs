@@ -33,6 +33,7 @@ namespace NinjaBox.View.GameObjectsView
             movingPlatformBarHorizontalTexture = content.Load<Texture2D>("PlatformImages/MovingPlatformBarHorizontal.png");
             movingPlatformBarVerticalTexture = content.Load<Texture2D>("PlatformImages/MovingPlatformBarVertical.png");
         }
+
         /// <summary>
         /// Draws all the platforms for a level
         /// </summary>

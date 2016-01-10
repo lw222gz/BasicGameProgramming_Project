@@ -5,6 +5,9 @@ using System.Text;
 
 namespace NinjaBox.View.VisualEffects
 {
+    /// <summary>
+    /// interface for visual effects. Contents are required for the visual effect loop
+    /// </summary>
     interface IEffect
     {
         //Task: draw the visual effect

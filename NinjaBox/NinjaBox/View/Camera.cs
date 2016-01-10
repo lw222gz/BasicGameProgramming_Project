@@ -12,17 +12,14 @@ namespace NinjaBox.View
     {
         private float ScreenWidth;
         private float ScreenHeight;
-        private float currentPlatformHeight;
         private Vector2 cameraOffset;
         public Camera(GraphicsDevice device)
         {
             ScreenWidth = device.Viewport.Width;
             ScreenHeight = device.Viewport.Height;
-            cameraOffset = new Vector2(0, 0);
-
-            currentPlatformHeight = 0;
-            
+            cameraOffset = new Vector2(0, 0);           
         }
+
         public Vector2 CameraOffSet
         {
             get { return cameraOffset; }
@@ -51,10 +48,6 @@ namespace NinjaBox.View
             return new Vector2(((modelPosition.X * ScreenWidth) + modifier * ScreenWidth), (modelPosition.Y * ScreenHeight));
         }
 
-        public Vector2 GetScale(Vector2 size, Texture2D texture)
-        {
-            return new Vector2((size.X * ScreenWidth) / texture.Bounds.Width, (size.Y * ScreenHeight) / texture.Bounds.Height);
-        }
 
         //updates the camera offset depending on the player position and if the player is close to the level exit
         public void UpdateCameraOffset(Player player, LevelExit levelExit)

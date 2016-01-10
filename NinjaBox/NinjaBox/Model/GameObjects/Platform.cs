@@ -9,7 +9,6 @@ namespace NinjaBox.Model.GameObjects
     class Platform
     {
         private Vector2 position;
-        private float endXPosition;
 
         private Vector2 platformSize = new Vector2(0.1f, 0.1f);
         private float platformWidth;
@@ -37,7 +36,6 @@ namespace NinjaBox.Model.GameObjects
             this.position = new Vector2(startPosition.X + (endXPosition - startPosition.X) / 2,  startPosition.Y + platformSize.Y/2);
             platformWidth = endXPosition - startPosition.X;
 
-            this.endXPosition = endXPosition;
             this.amountOfViewPlatforms = amountOfViewPlatforms;
 
             isMoving = false;
@@ -69,10 +67,6 @@ namespace NinjaBox.Model.GameObjects
         public Vector2 Position
         {
             get { return position; }
-        }
-        public float EndXPosition
-        {
-            get { return endXPosition; }
         }
         public Vector2 PlatformViewSize
         {

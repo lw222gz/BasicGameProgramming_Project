@@ -14,6 +14,11 @@ using System.Text;
 
 namespace NinjaBox.View
 {
+    /// <summary>
+    /// This class handels all the other views and draws the entire game. 
+    /// All other classes that draws NEED to inherit from this class
+    /// All of these classes should have a default constructor with 0 parameters to load in all of it's content
+    /// </summary>
     class MainView
     {
         protected static Camera camera;
@@ -66,6 +71,7 @@ namespace NinjaBox.View
             //need to load all buttons here when the protected static content field has gotten it's value
             imgui.LoadResources();
 
+            //loads all the visual effects by initializing the constuctors
             playerView = new PlayerView();
             platformView = new PlatformView();
             enemyView = new EnemyView();
@@ -74,20 +80,23 @@ namespace NinjaBox.View
             powerBoxView = new PowerBoxView();
             securityCameraView = new SecurityCameraView();
 
+            //content used in the mainview
             menuBackgroundTexture = content.Load<Texture2D>("MenuBackground.png");
             backGroundTexture = content.Load<Texture2D>("GameBackground.png");
             backGroundWinTexture = content.Load<Texture2D>("WinBackgroundPlaceholder.png");
-
-            //this is never used but the constructor that takes 0 arguments loads in the contents for the effect
-            //thus it wont have to load each time a new effect is created.
-            EnemyShootingPlayerEffect loadShootingEffectContent = new EnemyShootingPlayerEffect();
-            EnemyExplodesEffect loadEnemyExplodeEffect = new EnemyExplodesEffect();
-
 
             EnemyDiesSound = content.Load<SoundEffect>("EnemyDies");
             playerFallSound = content.Load<SoundEffect>("WilhelmScream");
             backgroundMusic = content.Load<Song>("StealthGroover");
 
+
+            //these objects are never used but I need to initiate their constructors to load their content
+            //and thus their content wont have to load each time a new effect is created.
+            EnemyShootingPlayerEffect loadShootingEffectContent = new EnemyShootingPlayerEffect();
+            EnemyExplodesEffect loadEnemyExplodeEffect = new EnemyExplodesEffect();
+            
+
+            //initiates the background music after all the content has been loaded
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(backgroundMusic);
 
@@ -96,6 +105,11 @@ namespace NinjaBox.View
             visualEffects = new List<IEffect>(5);
         }
 
+        /// <summary>
+        /// Draws the entire game
+        /// </summary>
+        /// <param name="level">level obj for the current level the player is on</param>
+        /// <param name="elapsedTime">time elapsed since last update, this value is used for some visual effects</param>
         public void DrawGame(Level level, float elapsedTime)
         {
             //updates the camera offset so the screen follows the player

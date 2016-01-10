@@ -12,6 +12,10 @@ namespace NinjaBox.View.GameObjectsView
     {
         private Texture2D securityCameraTexture;
         private Texture2D securityCameraDetectionAreaTexture;
+
+        /// <summary>
+        /// loads all textures for this view
+        /// </summary>
         public SecurityCameraView()
         {
             securityCameraTexture = content.Load<Texture2D>("SecurityCameraPlaceholder.jpg");

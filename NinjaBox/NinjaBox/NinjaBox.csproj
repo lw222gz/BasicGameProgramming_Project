@@ -15,7 +15,7 @@
     <MonoGameContentBuilderExe>
     </MonoGameContentBuilderExe>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>C:\Users\Lucas\Desktop\NinjaBoxGame_PRERELEASE\</PublishUrl>
+    <PublishUrl>C:\Users\Lucas\Github\BasicGameProgramming_Project\NinjaBoxGame_FINAL_RELEASE\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -54,10 +54,10 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>086604B9B01A1D55B1D638229D1850FB0335CC5C</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>28C72FDDABF02610997E9A5B4AB41710C25B8C12</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>NinjaBox_1_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>NinjaBox_2_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -226,6 +226,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="NinjaBox_1_TemporaryKey.pfx" />
+    <None Include="NinjaBox_2_TemporaryKey.pfx" />
     <None Include="NinjaBox_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

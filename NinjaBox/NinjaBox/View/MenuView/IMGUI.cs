@@ -27,7 +27,6 @@ namespace NinjaBox.View
         private Texture2D NumberButtonNormalTexture;
         private Texture2D NumberButtonHoverTexture;
 
-        private ButtonState currentButtonState;
         private ButtonState oldButtonState;
 
         private SoundEffect buttonClickSound;
@@ -37,7 +36,6 @@ namespace NinjaBox.View
 
         public IMGUI()
         {
-            currentButtonState = ButtonState.Released;
             oldButtonState = ButtonState.Released;
             activeButtons = new List<Button>(3);
             //gameMenu = new GameMenu(content);
@@ -53,12 +51,10 @@ namespace NinjaBox.View
         /// Loads all button objects
         /// </summary>
         public void LoadResources()
-        {
-            //restart menu
+        {          
             RestartButton = new Button(content.Load<Texture2D>("ButtonImages/RestartButtonNormal.png"),
                                         content.Load<Texture2D>("ButtonImages/RestartButtonHover.png"));
 
-            //main menu
             PlayGameButton = new Button(content.Load<Texture2D>("ButtonImages/PlayGameNormalButton.png"),
                                         content.Load<Texture2D>("ButtonImages/PlayGameHoverButton.png"));
 
@@ -75,7 +71,6 @@ namespace NinjaBox.View
             NumberButtonHoverTexture = content.Load<Texture2D>("ButtonImages/NumberButtonHover.png");
 
 
-            //pause menu
             MainMenuButton = new Button(content.Load<Texture2D>("ButtonImages/MainMenuButtonNormal.png"),
                                         content.Load<Texture2D>("ButtonImages/MainMenuButtonHover.png"));
 
@@ -227,7 +222,6 @@ namespace NinjaBox.View
         /// </summary>
         public void DrawMenu()
         {
-            //TODO: Change so the position is by default x: 700 and y : 200 and then any button after that gets +300 in Y led
             foreach (Button b in activeButtons)
             {
                 spriteBatch.Draw(b.ActiveTexture,
@@ -241,7 +235,6 @@ namespace NinjaBox.View
                                 0);
                 if (b.Message != null)
                 {
-                    //have to use .ToString on the message since it's a nullable
                     messageView.DrawQuickMessage(b.Message, b.Position);
                 }
             }

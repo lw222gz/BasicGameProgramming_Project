@@ -12,6 +12,7 @@ namespace NinjaBox.Model.GameObjects
         private Vector2 position;
         private int connectionID;
         private bool isActive;
+
         public PowerBox(Vector2 position, int connectionID)
         {
             this.position = position;

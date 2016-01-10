@@ -13,6 +13,12 @@ namespace NinjaBox.Model.GameObjects
         private int connectionID;
         private bool isTurnedOn;
         
+        /// <summary>
+        /// Initiates a new camera with a position and a connectionID
+        /// </summary>
+        /// <param name="position">position of the camera</param>
+        /// <param name="connectionID">this ID is identical to a possible existing power box, ID is used when 
+        /// a power box is destroyed and see what cameras it was linked to (thus turning those cameras off)</param>
         public SecurityCamera(Vector2 position, int connectionID)
         {
             this.position = position;
@@ -21,6 +27,7 @@ namespace NinjaBox.Model.GameObjects
             this.isTurnedOn = true;
         }
 
+        //Properties for the class
         public Vector2 Position
         {
             get { return position; }
@@ -45,6 +52,7 @@ namespace NinjaBox.Model.GameObjects
         {
             get { return new Vector2(position.X - CameraSize.X/2, position.Y + CameraSize.Y / 2); }
         }
+        //---
 
         /// <summary>
         /// disables the cameras detection area.

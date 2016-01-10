@@ -17,6 +17,10 @@ namespace NinjaBox.View.GameObjectsView
             levelExitTexture = content.Load<Texture2D>("ExitPlaceholder.png");
         }
 
+        /// <summary>
+        /// draws the level exit
+        /// </summary>
+        /// <param name="levelExit">obj refrence to the level exit</param>
         public void DrawExit(LevelExit levelExit)
         {
             spriteBatch.Draw(levelExitTexture, 

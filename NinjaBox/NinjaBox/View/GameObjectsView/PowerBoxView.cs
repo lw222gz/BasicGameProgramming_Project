@@ -13,6 +13,10 @@ namespace NinjaBox.View.GameObjectsView
         private Texture2D powerBoxTexture;
         private Texture2D destroyedPowerBoxTexture;
         private Texture2D activePowerBoxTexture;
+
+        /// <summary>
+        /// Loads in all textures
+        /// </summary>
         public PowerBoxView()
         {
             powerBoxTexture = content.Load<Texture2D>("SecurityCameraPowerBoxPlaceholder.png");

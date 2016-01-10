@@ -13,8 +13,6 @@ namespace NinjaBox.View.MenuView
         private Texture2D buttonImage;
         private Texture2D hoverButtonImage;
         private string message;
-        private float buttonWidth;
-        private float buttonHeight;
 
         //button with no hover effect
         public Button(Texture2D buttonImage) : this(buttonImage, buttonImage, null)
@@ -68,11 +66,6 @@ namespace NinjaBox.View.MenuView
             set;
         }
 
-        public ButtonState OldMouseState
-        {
-            get;
-            set;
-        }
         public bool IsMouseOver
         {
             get;

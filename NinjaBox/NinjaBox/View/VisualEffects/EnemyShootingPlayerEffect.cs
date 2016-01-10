@@ -23,11 +23,21 @@ namespace NinjaBox.View.VisualEffects
 
         private static Texture2D bulletTexture;
         private static SoundEffect bulletShotSound;
+
+        /// <summary>
+        /// loads in the visual effects content
+        /// </summary>
         public EnemyShootingPlayerEffect()
         {
             bulletTexture = content.Load<Texture2D>("BulletPlaceholder.png");
             bulletShotSound = content.Load<SoundEffect>("GunShot");
         }
+        /// <summary>
+        /// Initiates the visual effect
+        /// </summary>
+        /// <param name="enemy">enemy obj that is shooting the player</param>
+        /// <param name="playerVelocity">Velocity of the player so the bullets aim can be predicted</param>
+        /// <param name="playerCanJump">To avoid a bugg with the velocity being count in if the player would stand still I need to see if the player is on the platform</param>
         public EnemyShootingPlayerEffect(Enemy enemy, Vector2 playerVelocity, bool playerCanJump)
         {
             this.enemy = enemy;
@@ -39,11 +49,18 @@ namespace NinjaBox.View.VisualEffects
             bullets = new List<EnemyBullet>(5);
         }
 
+        /// <summary>
+        /// returns boolean representing if the visual effect is over
+        /// </summary>
         public bool IsEffectOver
         {
             get { return shootDurotation == .25f; }
         }
 
+        /// <summary>
+        /// Runs the visual effect
+        /// </summary>
+        /// <param name="timeElapsed">time elapsed since last update</param>
         public void RunEffect(float timeElapsed)
         {
             //shoot bullets to the players location

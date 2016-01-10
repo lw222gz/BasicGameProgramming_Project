@@ -294,7 +294,7 @@ namespace NinjaBox.Model
         }
 
         /// <summary>
-        /// 
+        /// Add level messages to a level, I dident figure out a good way to place this via the 2d matrix so i gave it it's own method
         /// </summary>
         /// <param name="levelIdentifier"></param>
         private void SetLevelMessages(int levelIdentifier)
@@ -339,10 +339,13 @@ namespace NinjaBox.Model
 
         
 
-
-        public void RemoveEnemy(Enemy e)
+        /// <summary>
+        /// removes an enemy form the level
+        /// </summary>
+        /// <param name="enemy">enemby obj that gets removed</param>
+        public void RemoveEnemy(Enemy enemy)
         {
-            enemies.Remove(e);
+            enemies.Remove(enemy);
         }
 
         /// <summary>

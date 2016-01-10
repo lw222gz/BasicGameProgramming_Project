@@ -31,11 +31,9 @@ namespace NinjaBox.Model.GameObjects
         //TODO: add a playerState Enum, state could be: dead, alive, hasFinishedgame, stunned etc.
         private bool hasFinishedGame;
         private bool isAlive;
-        //measured in seconds
-        
-        
 
         private bool playerCanJump;
+
         public Player()
         {
             isAlive = true;

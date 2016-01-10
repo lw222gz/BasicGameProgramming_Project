@@ -11,15 +11,12 @@ namespace NinjaBox.View.GameObjectsView
 {
     class PlayerView : MainView
     {
-        //private SpriteBatch spriteBatch;
-        //private Camera camera;
-        private Vector2 playerScale;
         private Texture2D playerTexture;
         private Texture2D attackTexture;
         private float attackDirectionModifier;
 
         /// <summary>
-        /// Default constructor
+        /// loads in all textures
         /// </summary>
         public PlayerView() 
         {
@@ -27,20 +24,13 @@ namespace NinjaBox.View.GameObjectsView
             attackTexture = content.Load<Texture2D>("PlaceholderAttack.png");
         }
 
+        /// <summary>
+        /// Draws the player obj
+        /// </summary>
+        /// <param name="player"></param>
         public void DrawPlayer(Player player)
         {
-            playerScale = camera.GetScale(player.Size, playerTexture);
-
-            spriteBatch.Draw(playerTexture, 
-                    camera.getVisualCords(player.Position), 
-                    null,
-                    Color.White,
-                    0f,
-                    new Vector2((playerScale.X * playerTexture.Bounds.Width) /2, (playerScale.Y * playerTexture.Bounds.Height) / 2),
-                    playerScale,
-                    SpriteEffects.None,
-                    0);
-
+            //adds the attack texture
             if (player.PlayerIsAttacking)
             {
                 attackDirectionModifier = player.Size.X / 2 + player.AttackRange.X / 2;
@@ -48,16 +38,28 @@ namespace NinjaBox.View.GameObjectsView
                 {
                     attackDirectionModifier = -(attackDirectionModifier);
                 }
-                spriteBatch.Draw(attackTexture, 
-                                camera.getVisualCords(new Vector2(player.Position.X + attackDirectionModifier, player.Position.Y)), 
-                                null, 
-                                Color.White, 
-                                0f, 
-                                new Vector2(attackTexture.Bounds.Width/2, attackTexture.Bounds.Height/2), 
-                                1, 
-                                SpriteEffects.None, 
+                spriteBatch.Draw(attackTexture,
+                                camera.getVisualCords(new Vector2(player.Position.X + attackDirectionModifier, player.Position.Y)),
+                                null,
+                                Color.White,
+                                0f,
+                                new Vector2(attackTexture.Bounds.Width / 2, attackTexture.Bounds.Height / 2),
+                                1f,
+                                SpriteEffects.None,
                                 0);
             }
+
+            spriteBatch.Draw(playerTexture, 
+                    camera.getVisualCords(player.Position), 
+                    null,
+                    Color.White,
+                    0f,
+                    new Vector2(playerTexture.Bounds.Width /2, playerTexture.Bounds.Height / 2),
+                    1f,
+                    SpriteEffects.None,
+                    0);
+
+            
         }
     }
 }

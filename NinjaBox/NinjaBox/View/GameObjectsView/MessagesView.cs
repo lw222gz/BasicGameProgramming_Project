@@ -24,6 +24,10 @@ namespace NinjaBox.View.GameObjectsView
         }
 
 
+        /// <summary>
+        /// Draws a list of Message obj's
+        /// </summary>
+        /// <param name="levelMessages">list of Message obj</param>
         public void DrawMessages(List<Message> levelMessages){
 
             foreach(Message m in levelMessages){

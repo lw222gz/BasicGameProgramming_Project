@@ -29,17 +29,12 @@ namespace NinjaBox.Model.GameObjects
         private float speed = 0.1f;
         private bool shouldTurn;
 
-
-        private bool hasKilledPlayer;
         private Vector2 shotDirection;
-
-
 
         public Enemy(Vector2 position, Direction faceDirection) : this(position, faceDirection, 0, false) { }
 
         public Enemy(Vector2 position, Direction faceDirection, float patrolPath, bool shouldTurn)
         {
-            hasKilledPlayer = false;
             this.position = position;
             //small adjustments to the position required due to the enemies take up more than 1 grid size-wise
             this.position.Y -= Size.Y / 10;
@@ -97,10 +92,6 @@ namespace NinjaBox.Model.GameObjects
         public float DetectionAreaYDownLed
         {
             get { return detectionAreaYDownled; }
-        }
-        public bool HasKilledPlayer
-        {
-            get { return hasKilledPlayer; }
         }
         public Vector2 ShotDirection
         {
@@ -182,7 +173,7 @@ namespace NinjaBox.Model.GameObjects
         /// <param name="shotLocation">location where the player got shot</param>
         public void KilledPlayer(Vector2 shotLocation)
         {
-            hasKilledPlayer = true;
+
             this.shotDirection = shotLocation;
         }
     }

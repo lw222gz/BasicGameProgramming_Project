@@ -147,6 +147,12 @@ namespace NinjaBox.Model
             return false;
         }
 
+
+        /// <summary>
+        /// checks if the player has entered the detection area for a camera
+        /// </summary>
+        /// <param name="securityCam">camera obj that get's it's detection area checked</param>
+        /// <returns>returns true if player is detected</returns>
         public bool CheckCameraDetection(SecurityCamera securityCam)
         {
             if(position.X - size.X/2 <= securityCam.DetectionAreaPosition.X + securityCam.DetectionAreaSize.X / 2 &&
